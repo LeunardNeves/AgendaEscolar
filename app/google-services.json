@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "46591120052",
+    "project_id": "agendaescolar-10b43",
+    "storage_bucket": "agendaescolar-10b43.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46591120052:android:4ce45166059a9913ccbde1",
+        "android_client_info": {
+          "package_name": "com.example.horario"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-nuRWqMNZadmZSdGocg_VwVo-Hxel5MA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

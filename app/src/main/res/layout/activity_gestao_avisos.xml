@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000B2E"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnVoltar"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_item"
+                android:paddingHorizontal="16dp"
+                android:text="‹ VOLTAR"
+                android:textColor="#dfdfeb"
+                android:textStyle="bold"
+                android:translationZ="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="AVISOS"
+                android:textColor="#dfdfeb"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TÍTULO DO AVISO"
+            android:textColor="#dfdfeb"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <EditText
+                android:id="@+id/editTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@android:color/transparent"
+                android:hint="DIGITE O TÍTULO DO AVISO..."
+                android:textColorHint="#A0A0A0"
+                android:textColor="#121212"
+                android:padding="16dp"
+                android:textSize="14sp" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONTEÚDO DO AVISO"
+            android:textColor="#dfdfeb"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <EditText
+                android:id="@+id/editAviso"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="top"
+                android:hint="ESCREVA O COMUNICADO AQUI..."
+                android:textColorHint="#A0A0A0"
+                android:textColor="#121212"
+                android:padding="16dp"
+                android:textSize="14sp" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SELECIONE O TIPO DE AVISO"
+            android:textColor="#dfdfeb"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="15dp"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <CheckBox
+                android:id="@+id/checkNormal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="NORMAL"
+                android:textColor="#121212"
+                android:paddingStart="16dp"
+                android:buttonTint="#7B61FF" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="15dp"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <CheckBox
+                android:id="@+id/checkUrgente"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="URGENTE"
+                android:textColor="#121212"
+                android:paddingStart="16dp"
+                android:buttonTint="#7B61FF" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnPublicar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_item"
+            android:backgroundTint="#7B61FF"
+            android:text="EMITIR COMUNICADO"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AVISOS PUBLICADOS"
+            android:textColor="#dfdfeb"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutListaAvisos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnIrPainel"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_item"
+            android:text="IR PARA PAINEL ADMINISTRATIVO"
+            android:textColor="#dfdfeb"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</ScrollView>

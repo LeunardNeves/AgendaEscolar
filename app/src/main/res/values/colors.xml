@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_midnight">#000B2E</color>
+    <color name="surface_navy">#021444</color>
+
+    <color name="electric_blue">#1A56F0</color>
+    <color name="cyan_tech">#00C2FF</color>
+
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_gray">#CBD5E1</color>
+</resources>

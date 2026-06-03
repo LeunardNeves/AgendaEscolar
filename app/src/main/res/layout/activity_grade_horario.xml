@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@drawable/bg_gradiente">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- TOPO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="25dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnVoltar"
+                android:layout_width="85dp"
+                android:layout_height="45dp"
+                android:background="@drawable/bg_item"
+                android:text="VOLTAR"
+                android:textColor="#dfdfeb"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="GRADE DE HORÁRIO"
+                android:textColor="#dfdfeb"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="85dp"
+                android:layout_height="45dp" />
+        </LinearLayout>
+
+        <!-- SEGUNDA -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SEGUNDA-FEIRA"
+                    android:textColor="#3F3D89"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="10dp"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutSegunda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAdicionarSegunda"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_item"
+                    android:backgroundTint="#EEF0FF"
+                    android:text="+ ADICIONAR HORÁRIO"
+                    android:textColor="#7B61FF"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- TERÇA -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TERÇA-FEIRA"
+                    android:textColor="#3F3D89"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="10dp"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutTerca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAdicionarTerca"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_item"
+                    android:backgroundTint="#EEF0FF"
+                    android:text="+ ADICIONAR HORÁRIO"
+                    android:textColor="#7B61FF"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- QUARTA -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="QUARTA-FEIRA"
+                    android:textColor="#3F3D89"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="10dp"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutQuarta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAdicionarQuarta"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_item"
+                    android:backgroundTint="#EEF0FF"
+                    android:text="+ ADICIONAR HORÁRIO"
+                    android:textColor="#7B61FF"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- QUINTA -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="QUINTA-FEIRA"
+                    android:textColor="#3F3D89"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="10dp"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutQuinta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAdicionarQuinta"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_item"
+                    android:backgroundTint="#EEF0FF"
+                    android:text="+ ADICIONAR HORÁRIO"
+                    android:textColor="#7B61FF"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- SEXTA -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SEXTA-FEIRA"
+                    android:textColor="#3F3D89"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="10dp"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutSexta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAdicionarSexta"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_item"
+                    android:backgroundTint="#EEF0FF"
+                    android:text="+ ADICIONAR HORÁRIO"
+                    android:textColor="#7B61FF"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- ATUALIZAR -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAtualizarGrade"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_item"
+            android:backgroundTint="#7B61FF"
+            android:text="ATUALIZAR GRADE"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:paddingHorizontal="20dp" />
+
+    </LinearLayout>
+</ScrollView>

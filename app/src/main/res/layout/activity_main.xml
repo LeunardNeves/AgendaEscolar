@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/bg_midnight">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/logo_eetepa"
+            android:layout_width="280dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/logoescolar1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BEM-VINDO"
+            android:textColor="@color/text_white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EETEPA CURUÇÁ"
+            android:textColor="@color/cyan_tech"
+            android:textSize="17sp"
+            android:layout_marginBottom="20dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnPainelAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginBottom="25dp"
+            android:paddingHorizontal="24dp"
+            android:background="@drawable/bg_admin"
+            android:text="ACESSAR PAINEL ADM"
+            android:textColor="@color/text_white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textAllCaps="false" />
+
+        <LinearLayout
+            android:id="@+id/layoutCurso"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/bg_item"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="12dp">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_school"
+                app:tint="@color/electric_blue" />
+            <TextView
+                android:id="@+id/txtCurso"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="Selecione o Curso"
+                android:textColor="#8A99AD"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▼"
+                android:textColor="@color/text_white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutAno"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/bg_item"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="12dp">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_calendar"
+                app:tint="@color/electric_blue" />
+            <TextView
+                android:id="@+id/txtAno"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="Selecione o Ano/Módulo"
+                android:textColor="#8A99AD"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▼"
+                android:textColor="@color/text_white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutTurno"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/bg_item"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="25dp">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@android:drawable/ic_menu_recent_history"
+                app:tint="@color/electric_blue" />
+            <TextView
+                android:id="@+id/txtTurno"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="Selecione o Turno"
+                android:textColor="#8A99AD"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▼"
+                android:textColor="@color/text_white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnContinuar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/bg_item"
+            android:backgroundTint="@color/electric_blue"
+            android:text="SALVAR E CONTINUAR"
+            android:textColor="@color/text_white"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</ScrollView>

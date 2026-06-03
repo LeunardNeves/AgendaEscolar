@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.AppHorarioEscolar" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Força a barra de status lá de cima a usar a cor escura do seu app -->
+        <item name="android:statusBarColor">@color/bg_midnight</item>
+
+        <!-- Garante que os ícones (bateria, wi-fi, hora) fiquem brancos/claros no fundo escuro -->
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Evita que o Material 3 pinte a barra com tons roxos dinâmicos -->
+        <item name="colorPrimary">@color/bg_midnight</item>
+        <item name="colorSurface">@color/bg_midnight</item>
+    </style>
+
+    <style name="Theme.AppHorarioEscolar" parent="Base.Theme.AppHorarioEscolar" />
+</resources>
