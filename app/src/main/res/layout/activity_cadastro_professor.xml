@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@drawable/bg_gradiente">
+    android:background="#020A22"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,16 +15,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="28dp">
+            android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btnVoltar"
-                android:layout_width="88dp"
-                android:layout_height="46dp"
-                android:background="@drawable/bg_item"
-                android:text="VOLTAR"
+                android:layout_width="90dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_btn_voltar"
+                android:text="‹  VOLTAR"
                 android:textColor="#FFFFFF"
                 android:textSize="11sp"
                 android:textStyle="bold" />
@@ -33,142 +32,153 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="CADASTRO DE\nDOCENTE"
                 android:textColor="#FFFFFF"
-                android:textSize="19sp"
-                android:textStyle="bold"
-                android:gravity="center" />
-
-            <Space
-                android:layout_width="88dp"
-                android:layout_height="46dp" />
+                android:textSize="21sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="Preencha os dados do professor e adicione os vínculos de atuação."
+            android:textColor="#AEB9D8"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
             android:text="NOME DO PROFESSOR"
-            android:textColor="#C9D3F5"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editNomeProfessor"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:background="@drawable/bg_item"
-            android:hint="Digite o nome completo"
-            android:textColorHint="#8A99AD"
-            android:textColor="#FFFFFF"
-            android:paddingHorizontal="18dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="18dp" />
+            android:background="@drawable/bg_input_neon"
+            android:hint="Digite o nome completo"
+            android:inputType="textPersonName"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8F9BBC"
+            android:textSize="15sp" />
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="E-MAIL / LOGIN"
-            android:textColor="#C9D3F5"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editEmailProfessor"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:background="@drawable/bg_item"
-            android:hint="Digite o e-mail ou login"
-            android:textColorHint="#8A99AD"
-            android:textColor="#FFFFFF"
-            android:paddingHorizontal="18dp"
-            android:inputType="textEmailAddress"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp" />
+            android:background="@drawable/bg_input_neon"
+            android:hint="Digite o e-mail ou login"
+            android:inputType="textEmailAddress"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8F9BBC"
+            android:textSize="15sp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutCurso"
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/dropCurso"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_input_neon"
             android:hint="Selecione o curso"
-            android:layout_marginBottom="18dp"
-            app:boxBackgroundColor="#061A4A"
-            app:boxStrokeColor="#7B61FF"
-            app:hintTextColor="#C9D3F5"
-            app:endIconMode="dropdown_menu"
-            app:boxCornerRadiusTopStart="18dp"
-            app:boxCornerRadiusTopEnd="18dp"
-            app:boxCornerRadiusBottomStart="18dp"
-            app:boxCornerRadiusBottomEnd="18dp">
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8F9BBC"
+            android:textSize="15sp" />
 
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/dropCurso"
-                android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:inputType="none"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#8A99AD"
-                android:paddingHorizontal="18dp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutMateria"
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/dropMateria"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_input_neon"
             android:hint="Selecione a matéria"
-            android:layout_marginBottom="22dp"
-            app:boxBackgroundColor="#061A4A"
-            app:boxStrokeColor="#7B61FF"
-            app:hintTextColor="#C9D3F5"
-            app:endIconMode="dropdown_menu"
-            app:boxCornerRadiusTopStart="18dp"
-            app:boxCornerRadiusTopEnd="18dp"
-            app:boxCornerRadiusBottomStart="18dp"
-            app:boxCornerRadiusBottomEnd="18dp">
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8F9BBC"
+            android:textSize="15sp" />
 
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/dropMateria"
-                android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:inputType="none"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#8A99AD"
-                android:paddingHorizontal="18dp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/btnAdicionarVinculo"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/bg_item"
-            android:backgroundTint="#00BFA6"
+            android:layout_height="58dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_btn_verde"
             android:text="+ ADICIONAR VÍNCULO"
             android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:layout_marginBottom="24dp" />
-
-        <TextView
-            android:text="VÍNCULOS ADICIONADOS"
-            android:textColor="#C9D3F5"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <LinearLayout
-            android:id="@+id/layoutVinculos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:background="@drawable/bg_card_vinculos"
             android:orientation="vertical"
-            android:layout_marginBottom="28dp" />
+            android:padding="18dp">
 
-        <androidx.appcompat.widget.AppCompatButton
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="VÍNCULOS ADICIONADOS"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/layoutVinculos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textVinculoVazio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="25dp"
+                    android:text="Nenhum vínculo adicionado ainda."
+                    android:textColor="#8F9BBC"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
             android:id="@+id/btnSalvarProfessor"
             android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:background="@drawable/bg_item"
-            android:backgroundTint="#7B61FF"
+            android:layout_height="60dp"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/bg_btn_roxo"
             android:text="SALVAR PROFESSOR"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold" />
 
     </LinearLayout>
+
 </ScrollView>

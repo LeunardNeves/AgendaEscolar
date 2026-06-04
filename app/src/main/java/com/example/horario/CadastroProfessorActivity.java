@@ -30,10 +30,10 @@ public class CadastroProfessorActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
 
-    private ArrayList<String> listaCursos = new ArrayList<>();
-    private ArrayList<String> listaMaterias = new ArrayList<>();
-    private ArrayList<Map<String, String>> dadosMaterias = new ArrayList<>();
-    private ArrayList<Map<String, String>> vinculosAdicionados = new ArrayList<>();
+    private final ArrayList<String> listaCursos = new ArrayList<>();
+    private final ArrayList<String> listaMaterias = new ArrayList<>();
+    private final ArrayList<Map<String, String>> dadosMaterias = new ArrayList<>();
+    private final ArrayList<Map<String, String>> vinculosAdicionados = new ArrayList<>();
 
     private String cursoSelecionado = "";
     private String disciplinaSelecionada = "";
@@ -66,22 +66,26 @@ public class CadastroProfessorActivity extends AppCompatActivity {
 
         dropCurso.setOnItemClickListener((parent, view, position, id) -> {
             cursoSelecionado = listaCursos.get(position);
+
             dropMateria.setText("");
             disciplinaSelecionada = "";
             turnoSelecionado = "";
+
             carregarMateriasDoCurso(cursoSelecionado);
         });
 
         dropMateria.setOnItemClickListener((parent, view, position, id) -> {
             if (position >= 0 && position < dadosMaterias.size()) {
                 Map<String, String> materia = dadosMaterias.get(position);
+
                 disciplinaSelecionada = materia.get("Disciplina");
                 turnoSelecionado = materia.get("Turno");
             }
         });
 
         btnAdicionarVinculo.setOnClickListener(v -> adicionarVinculo());
-        btnSalvar.setOnClickListener(v -> salvarProfessor());
+
+        btnSalvar.setOnClickListener(v -> salvarNaGrade());
     }
 
     private void carregarCursosFirebase() {
@@ -93,7 +97,7 @@ public class CadastroProfessorActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot documento : queryDocumentSnapshots) {
                         String curso = documento.getString("Curso");
 
-                        if (curso != null && !listaCursos.contains(curso)) {
+                        if (curso != null && !curso.trim().isEmpty() && !listaCursos.contains(curso)) {
                             listaCursos.add(curso);
                         }
                     }
@@ -107,7 +111,11 @@ public class CadastroProfessorActivity extends AppCompatActivity {
                     dropCurso.setAdapter(adapterCurso);
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(this, "Erro ao carregar cursos: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                                this,
+                                "Erro ao carregar cursos: " + e.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show()
                 );
     }
 
@@ -147,7 +155,11 @@ public class CadastroProfessorActivity extends AppCompatActivity {
                     dropMateria.setAdapter(adapterMateria);
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(this, "Erro ao carregar matérias: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                                this,
+                                "Erro ao carregar matérias: " + e.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show()
                 );
     }
 
@@ -162,10 +174,16 @@ public class CadastroProfessorActivity extends AppCompatActivity {
             return;
         }
 
+        if (turnoSelecionado == null || turnoSelecionado.isEmpty()) {
+            Toast.makeText(this, "Turno não encontrado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         for (Map<String, String> vinculo : vinculosAdicionados) {
             if (vinculo.get("curso").equals(cursoSelecionado)
                     && vinculo.get("disciplina").equals(disciplinaSelecionada)
                     && vinculo.get("turno").equals(turnoSelecionado)) {
+
                 Toast.makeText(this, "Esse vínculo já foi adicionado", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -177,6 +195,7 @@ public class CadastroProfessorActivity extends AppCompatActivity {
         vinculo.put("turno", turnoSelecionado);
 
         vinculosAdicionados.add(vinculo);
+
         mostrarVinculosNaTela();
     }
 
@@ -187,7 +206,15 @@ public class CadastroProfessorActivity extends AppCompatActivity {
             Map<String, String> vinculo = vinculosAdicionados.get(i);
 
             TextView textView = new TextView(this);
-            textView.setText((i + 1) + ". " + vinculo.get("disciplina") + " | " + vinculo.get("curso") + " | " + vinculo.get("turno"));
+            textView.setText(
+                    (i + 1) + ". "
+                            + vinculo.get("disciplina")
+                            + " | "
+                            + vinculo.get("curso")
+                            + " | "
+                            + vinculo.get("turno")
+            );
+
             textView.setTextColor(getResources().getColor(android.R.color.white));
             textView.setTextSize(14);
             textView.setPadding(20, 15, 20, 15);
@@ -205,16 +232,16 @@ public class CadastroProfessorActivity extends AppCompatActivity {
         }
     }
 
-    private void salvarProfessor() {
-        String nome = editNomeProfessor.getText().toString().trim();
-        String email = editEmailProfessor.getText().toString().trim();
+    private void salvarNaGrade() {
+        String nomeProfessor = editNomeProfessor.getText().toString().trim();
+        String emailProfessor = editEmailProfessor.getText().toString().trim();
 
-        if (nome.isEmpty()) {
+        if (nomeProfessor.isEmpty()) {
             editNomeProfessor.setError("Digite o nome do professor");
             return;
         }
 
-        if (email.isEmpty()) {
+        if (emailProfessor.isEmpty()) {
             editEmailProfessor.setError("Digite o e-mail/login");
             return;
         }
@@ -224,42 +251,52 @@ public class CadastroProfessorActivity extends AppCompatActivity {
             return;
         }
 
-        Map<String, Object> professor = new HashMap<>();
-        professor.put("nome", nome);
-        professor.put("email", email);
-        professor.put("tipo", "professor");
-
-        db.collection("professores")
-                .add(professor)
-                .addOnSuccessListener(documentReference -> salvarVinculosProfessor(documentReference, nome))
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Erro ao salvar professor: " + e.getMessage(), Toast.LENGTH_LONG).show()
-                );
-    }
-
-    private void salvarVinculosProfessor(DocumentReference professorRef, String nomeProfessor) {
         WriteBatch batch = db.batch();
 
         for (Map<String, String> vinculo : vinculosAdicionados) {
-            DocumentReference vinculoRef = db.collection("vinculos_professor").document();
+            DocumentReference gradeRef = db.collection("grade").document();
 
-            Map<String, Object> dadosVinculo = new HashMap<>();
-            dadosVinculo.put("professorId", professorRef.getId());
-            dadosVinculo.put("professorNome", nomeProfessor);
-            dadosVinculo.put("curso", vinculo.get("curso"));
-            dadosVinculo.put("disciplina", vinculo.get("disciplina"));
-            dadosVinculo.put("turno", vinculo.get("turno"));
+            Map<String, Object> dadosGrade = new HashMap<>();
+            dadosGrade.put("Curso", vinculo.get("curso"));
+            dadosGrade.put("Disciplina", vinculo.get("disciplina"));
+            dadosGrade.put("Turno", vinculo.get("turno"));
+            dadosGrade.put("Professor", nomeProfessor);
+            dadosGrade.put("EmailProfessor", emailProfessor);
 
-            batch.set(vinculoRef, dadosVinculo);
+            batch.set(gradeRef, dadosGrade);
         }
 
         batch.commit()
                 .addOnSuccessListener(unused -> {
-                    Toast.makeText(this, "Professor cadastrado com vínculos!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            this,
+                            "Professor salvo na grade com sucesso!",
+                            Toast.LENGTH_SHORT
+                    ).show();
+
+                    limparCampos();
                     finish();
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(this, "Erro ao salvar vínculos: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                                this,
+                                "Erro ao salvar na grade: " + e.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show()
                 );
+    }
+
+    private void limparCampos() {
+        editNomeProfessor.setText("");
+        editEmailProfessor.setText("");
+        dropCurso.setText("");
+        dropMateria.setText("");
+
+        cursoSelecionado = "";
+        disciplinaSelecionada = "";
+        turnoSelecionado = "";
+
+        vinculosAdicionados.clear();
+        layoutVinculos.removeAllViews();
     }
 }
