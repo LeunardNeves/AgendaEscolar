@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ public class AlunoActivity extends AppCompatActivity {
     private String curso, ano, turno, cursoCompleto;
 
     private TextView txtInfoAluno, txtTituloAviso, txtDescricaoAviso, txtDataAviso;
+    private ImageView warn;
     private CardView cardSegunda, cardTerca, cardQuarta, cardQuinta, cardSexta, cardAviso;
 
     @Override
@@ -59,6 +61,7 @@ public class AlunoActivity extends AppCompatActivity {
         txtTituloAviso = findViewById(R.id.txtTituloAviso);
         txtDescricaoAviso = findViewById(R.id.txtDescricaoAviso);
         txtDataAviso = findViewById(R.id.txtDataAviso);
+        warn = findViewById(R.id.warn);
 
         cardSegunda = findViewById(R.id.cardSegunda);
         cardTerca = findViewById(R.id.cardTerca);
@@ -86,33 +89,68 @@ public class AlunoActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("avisos")
-                .whereEqualTo("urgente", true)
-                .limit(1)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots.isEmpty()) {
-                        txtTituloAviso.setText("Nenhum aviso urgente no momento");
-                        txtDescricaoAviso.setText("");
+                        txtTituloAviso.setText("Nenhum aviso no momento");
+                        txtDescricaoAviso.setText("Quando a secretaria publicar um aviso, ele aparecerá aqui.");
                         txtDataAviso.setText("Hoje");
+                        aplicarEstiloAviso(false);
                         return;
                     }
 
-                    QueryDocumentSnapshot doc =
-                            (QueryDocumentSnapshot) queryDocumentSnapshots.getDocuments().get(0);
+                    QueryDocumentSnapshot avisoPrioritario = null;
 
-                    String titulo = doc.getString("titulo");
-                    String descricao = doc.getString("descricao");
-                    String data = doc.getString("data");
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Boolean urgente = doc.getBoolean("urgente");
 
-                    txtTituloAviso.setText(titulo != null ? titulo : "Aviso urgente");
-                    txtDescricaoAviso.setText(descricao != null ? descricao : "");
-                    txtDataAviso.setText(data != null ? data : "");
+                        if (Boolean.TRUE.equals(urgente)) {
+                            avisoPrioritario = doc;
+                            break;
+                        }
+
+                        avisoPrioritario = doc;
+                    }
+
+                    if (avisoPrioritario != null) {
+                        String titulo = avisoPrioritario.getString("titulo");
+                        String descricao = avisoPrioritario.getString("descricao");
+                        String data = avisoPrioritario.getString("data");
+                        Boolean urgente = avisoPrioritario.getBoolean("urgente");
+
+                        String tipo = Boolean.TRUE.equals(urgente) ? "🔴 URGENTE" : "🔵 NORMAL";
+
+                        txtTituloAviso.setText(tipo + " - " + valorSeguro(titulo));
+                        txtDescricaoAviso.setText(valorSeguro(descricao));
+                        txtDataAviso.setText(valorSeguro(data));
+
+                        aplicarEstiloAviso(Boolean.TRUE.equals(urgente));
+                    }
                 })
                 .addOnFailureListener(e -> {
                     txtTituloAviso.setText("Erro ao carregar avisos");
                     txtDescricaoAviso.setText("");
                     txtDataAviso.setText("");
+                    aplicarEstiloAviso(false);
                 });
+    }
+
+    private void aplicarEstiloAviso(boolean urgente) {
+        if (urgente) {
+            cardAviso.setCardBackgroundColor(Color.parseColor("#4A0E0E"));
+            txtTituloAviso.setTextColor(Color.parseColor("#FF6B6B"));
+            txtDescricaoAviso.setTextColor(Color.WHITE);
+            txtDataAviso.setTextColor(Color.parseColor("#FFB4B4"));
+            warn.setImageResource(android.R.drawable.ic_dialog_alert);
+            warn.setColorFilter(Color.parseColor("#FF4444"));
+        } else {
+            cardAviso.setCardBackgroundColor(Color.parseColor("#081B55"));
+            txtTituloAviso.setTextColor(Color.parseColor("#16E0C4"));
+            txtDescricaoAviso.setTextColor(Color.WHITE);
+            txtDataAviso.setTextColor(Color.parseColor("#AEB9D8"));
+            warn.setImageResource(android.R.drawable.ic_dialog_info);
+            warn.setColorFilter(Color.parseColor("#16E0C4"));
+        }
     }
 
     private void carregarTodosAvisos() {
@@ -129,18 +167,18 @@ public class AlunoActivity extends AppCompatActivity {
                         String data = document.getString("data");
                         Boolean urgente = document.getBoolean("urgente");
 
-                        String tipo = Boolean.TRUE.equals(urgente) ? "URGENTE" : "NORMAL";
+                        String tipo = Boolean.TRUE.equals(urgente) ? "🔴 URGENTE" : "🔵 NORMAL";
 
                         avisos.add(
-                                tipo + "\n" +
-                                        titulo + "\n" +
-                                        descricao + "\n" +
-                                        "Data: " + data
+                                tipo + "\n\n" +
+                                        "Título: " + valorSeguro(titulo) + "\n\n" +
+                                        "Descrição: " + valorSeguro(descricao) + "\n\n" +
+                                        "Data: " + valorSeguro(data)
                         );
                     }
 
                     if (avisos.isEmpty()) {
-                        Toast.makeText(this, "Nenhum aviso cadastrado.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Nenhum aviso publicado.", Toast.LENGTH_SHORT).show();
                     } else {
                         mostrarDialogoAvisos(avisos);
                     }
@@ -167,9 +205,9 @@ public class AlunoActivity extends AppCompatActivity {
                         String professor = document.getString("Professor");
 
                         horarios.add(
-                                horario + "\n" +
-                                        disciplina + "\n" +
-                                        "Prof: " + professor
+                                "Horário: " + valorSeguro(horario) + "\n\n" +
+                                        "Matéria: " + valorSeguro(disciplina) + "\n\n" +
+                                        "Professor: " + valorSeguro(professor)
                         );
                     }
 
@@ -223,16 +261,31 @@ public class AlunoActivity extends AppCompatActivity {
             card.setTextSize(16);
             card.setPadding(30, 25, 30, 25);
 
-            GradientDrawable bgCard = new GradientDrawable(
-                    GradientDrawable.Orientation.LEFT_RIGHT,
-                    new int[]{
-                            Color.parseColor("#5B2EFF"),
-                            Color.parseColor("#0B1B4D")
-                    }
-            );
+            boolean urgente = item.startsWith("🔴");
+
+            GradientDrawable bgCard;
+
+            if (urgente) {
+                bgCard = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        new int[]{
+                                Color.parseColor("#7A1010"),
+                                Color.parseColor("#0B1B4D")
+                        }
+                );
+                bgCard.setStroke(2, Color.parseColor("#FF4444"));
+            } else {
+                bgCard = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        new int[]{
+                                Color.parseColor("#5B2EFF"),
+                                Color.parseColor("#0B1B4D")
+                        }
+                );
+                bgCard.setStroke(1, Color.parseColor("#314D9B"));
+            }
 
             bgCard.setCornerRadius(26);
-            bgCard.setStroke(1, Color.parseColor("#314D9B"));
             card.setBackground(bgCard);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -282,5 +335,12 @@ public class AlunoActivity extends AppCompatActivity {
         }
 
         dialog.show();
+    }
+
+    private String valorSeguro(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            return "Não informado";
+        }
+        return texto;
     }
 }

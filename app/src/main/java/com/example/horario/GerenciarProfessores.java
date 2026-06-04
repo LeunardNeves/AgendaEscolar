@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Gravity;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
@@ -60,26 +63,27 @@ public class GerenciarProfessores extends AppCompatActivity {
                     for (QueryDocumentSnapshot documento : queryDocumentSnapshots) {
                         String nome = documento.getString("Professor");
                         String email = documento.getString("EmailProfessor");
-                        String curso = documento.getString("Curso");
-                        String disciplina = documento.getString("Disciplina");
-                        String turno = documento.getString("Turno");
 
-                        if (nome == null || email == null) {
+                        if (nome == null || nome.trim().isEmpty()
+                                || email == null || email.trim().isEmpty()) {
                             continue;
                         }
 
-                        String vinculo = "Curso: " + valorSeguro(curso)
-                                + "\nMatéria: " + valorSeguro(disciplina)
-                                + "\nTurno: " + valorSeguro(turno);
+                        Map<String, String> vinculo = new HashMap<>();
+                        vinculo.put("curso", valorSeguro(documento.getString("Curso")));
+                        vinculo.put("disciplina", valorSeguro(documento.getString("Disciplina")));
+                        vinculo.put("turma", valorSeguro(documento.getString("Turma")));
+                        vinculo.put("turno", valorSeguro(documento.getString("Turno")));
 
                         if (!professoresUnicos.containsKey(email)) {
                             Map<String, Object> professor = new HashMap<>();
 
-                            ArrayList<String> vinculos = new ArrayList<>();
+                            ArrayList<Map<String, String>> vinculos = new ArrayList<>();
                             vinculos.add(vinculo);
 
                             professor.put("nome", nome);
                             professor.put("email", email);
+                            professor.put("expandido", false);
                             professor.put("vinculos", vinculos);
 
                             professoresUnicos.put(email, professor);
@@ -88,8 +92,12 @@ public class GerenciarProfessores extends AppCompatActivity {
 
                             if (professor != null) {
                                 @SuppressWarnings("unchecked")
-                                ArrayList<String> vinculos = (ArrayList<String>) professor.get("vinculos");
-                                vinculos.add(vinculo);
+                                ArrayList<Map<String, String>> vinculos =
+                                        (ArrayList<Map<String, String>>) professor.get("vinculos");
+
+                                if (vinculos != null) {
+                                    vinculos.add(vinculo);
+                                }
                             }
                         }
                     }
@@ -123,7 +131,6 @@ public class GerenciarProfessores extends AppCompatActivity {
             vazio.setGravity(Gravity.CENTER);
             vazio.setPadding(30, 40, 30, 40);
             vazio.setBackgroundResource(R.drawable.bg_vinculo_vazio);
-
             layoutProfessores.addView(vazio);
             return;
         }
@@ -131,9 +138,15 @@ public class GerenciarProfessores extends AppCompatActivity {
         for (Map<String, Object> professor : listaProfessores) {
             String nome = String.valueOf(professor.get("nome"));
             String email = String.valueOf(professor.get("email"));
+            boolean expandido = Boolean.TRUE.equals(professor.get("expandido"));
 
             @SuppressWarnings("unchecked")
-            ArrayList<String> vinculos = (ArrayList<String>) professor.get("vinculos");
+            ArrayList<Map<String, String>> vinculos =
+                    (ArrayList<Map<String, String>>) professor.get("vinculos");
+
+            if (vinculos == null) {
+                vinculos = new ArrayList<>();
+            }
 
             LinearLayout card = new LinearLayout(this);
             card.setOrientation(LinearLayout.VERTICAL);
@@ -159,62 +172,224 @@ public class GerenciarProfessores extends AppCompatActivity {
             txtEmail.setTextSize(13);
             txtEmail.setPadding(0, 6, 0, 0);
 
-            TextView txtTituloVinculos = new TextView(this);
-            txtTituloVinculos.setText("Vínculos cadastrados:");
-            txtTituloVinculos.setTextColor(Color.WHITE);
-            txtTituloVinculos.setTextSize(15);
-            txtTituloVinculos.setTypeface(null, Typeface.BOLD);
-            txtTituloVinculos.setPadding(0, 18, 0, 10);
-
             TextView txtQuantidade = new TextView(this);
             txtQuantidade.setText(vinculos.size() == 1 ? "1 vínculo" : vinculos.size() + " vínculos");
             txtQuantidade.setTextColor(Color.parseColor("#16E0C4"));
             txtQuantidade.setTextSize(14);
             txtQuantidade.setTypeface(null, Typeface.BOLD);
-            txtQuantidade.setPadding(0, 8, 0, 0);
+            txtQuantidade.setPadding(0, 10, 0, 0);
+
+            Button btnVerVinculos = criarBotao(expandido ? "▲ OCULTAR VÍNCULOS" : "▼ VER VÍNCULOS", "#081B55");
+            btnVerVinculos.setOnClickListener(v -> {
+                professor.put("expandido", !expandido);
+                mostrarProfessoresNaTela();
+            });
+
+            Button btnEditar = criarBotao("✏ EDITAR PROFESSOR", "#7B61FF");
+            btnEditar.setOnClickListener(v -> abrirDialogEditarProfessor(nome, email));
+
+            Button btnAdicionar = criarBotao("➕ ADICIONAR VÍNCULO", "#09C7B0");
+            btnAdicionar.setOnClickListener(v -> abrirDialogAdicionarVinculo(nome, email));
+
+            Button btnExcluir = criarBotao("🗑 EXCLUIR PROFESSOR", "#E84142");
+            btnExcluir.setOnClickListener(v -> confirmarExclusao(nome, email));
 
             card.addView(txtNome);
             card.addView(txtEmail);
             card.addView(txtQuantidade);
-            card.addView(txtTituloVinculos);
+            card.addView(btnVerVinculos);
 
-            for (int i = 0; i < vinculos.size(); i++) {
-                TextView txtVinculo = new TextView(this);
-                txtVinculo.setText((i + 1) + ". " + vinculos.get(i));
-                txtVinculo.setTextColor(Color.parseColor("#16E0C4"));
-                txtVinculo.setTextSize(13);
-                txtVinculo.setPadding(16, 10, 16, 10);
-                txtVinculo.setBackgroundResource(R.drawable.bg_item_vinculo_moderno);
+            if (expandido) {
+                TextView titulo = new TextView(this);
+                titulo.setText("Horários e vínculos cadastrados:");
+                titulo.setTextColor(Color.WHITE);
+                titulo.setTextSize(15);
+                titulo.setTypeface(null, Typeface.BOLD);
+                titulo.setPadding(0, 18, 0, 10);
+                card.addView(titulo);
 
-                LinearLayout.LayoutParams vinculoParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-                vinculoParams.setMargins(0, 0, 0, 10);
-                txtVinculo.setLayoutParams(vinculoParams);
+                for (int i = 0; i < vinculos.size(); i++) {
+                    Map<String, String> vinculo = vinculos.get(i);
 
-                card.addView(txtVinculo);
+                    TextView txtVinculo = new TextView(this);
+                    txtVinculo.setText(
+                            (i + 1) + ". Curso: " + vinculo.get("curso") +
+                                    "\nMatéria: " + vinculo.get("disciplina") +
+                                    "\nTurma: " + vinculo.get("turma") +
+                                    "\nTurno: " + vinculo.get("turno")
+                    );
+
+                    txtVinculo.setTextColor(Color.parseColor("#16E0C4"));
+                    txtVinculo.setTextSize(13);
+                    txtVinculo.setPadding(16, 12, 16, 12);
+                    txtVinculo.setBackgroundResource(R.drawable.bg_item_vinculo_moderno);
+
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(0, 0, 0, 10);
+                    txtVinculo.setLayoutParams(params);
+
+                    card.addView(txtVinculo);
+                }
             }
 
-            Button btnExcluir = new Button(this);
-            btnExcluir.setText("🗑 EXCLUIR PROFESSOR");
-            btnExcluir.setTextColor(Color.WHITE);
-            btnExcluir.setTextSize(13);
-            btnExcluir.setTypeface(null, Typeface.BOLD);
-            btnExcluir.setBackgroundResource(R.drawable.bg_btn_excluir);
-
-            LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    56
-            );
-            btnParams.setMargins(0, 16, 0, 0);
-            btnExcluir.setLayoutParams(btnParams);
-
-            btnExcluir.setOnClickListener(v -> confirmarExclusao(nome, email));
-
+            card.addView(btnEditar);
+            card.addView(btnAdicionar);
             card.addView(btnExcluir);
+
             layoutProfessores.addView(card);
         }
+    }
+
+    private Button criarBotao(String texto, String cor) {
+        Button botao = new Button(this);
+        botao.setText(texto);
+        botao.setTextColor(Color.WHITE);
+        botao.setTextSize(13);
+        botao.setTypeface(null, Typeface.BOLD);
+        botao.setBackgroundColor(Color.parseColor(cor));
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                56
+        );
+        params.setMargins(0, 14, 0, 0);
+        botao.setLayoutParams(params);
+
+        return botao;
+    }
+
+    private EditText criarCampo(String hint, String texto) {
+        EditText campo = new EditText(this);
+        campo.setHint(hint);
+        campo.setText(texto);
+        campo.setTextColor(Color.WHITE);
+        campo.setHintTextColor(Color.parseColor("#8F9BBC"));
+        campo.setSingleLine(true);
+        campo.setPadding(20, 10, 20, 10);
+        campo.setBackgroundResource(R.drawable.bg_input_neon);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                58
+        );
+        params.setMargins(0, 10, 0, 10);
+        campo.setLayoutParams(params);
+
+        return campo;
+    }
+
+    private void abrirDialogEditarProfessor(String nomeAtual, String emailAtual) {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(30, 20, 30, 10);
+
+        EditText editNome = criarCampo("Nome do professor", nomeAtual);
+        EditText editEmail = criarCampo("E-mail do professor", emailAtual);
+        editEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+
+        layout.addView(editNome);
+        layout.addView(editEmail);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Editar professor")
+                .setView(layout)
+                .setPositiveButton("Salvar", (dialog, which) -> {
+                    String novoNome = editNome.getText().toString().trim();
+                    String novoEmail = editEmail.getText().toString().trim();
+
+                    if (novoNome.isEmpty() || novoEmail.isEmpty()) {
+                        Toast.makeText(this, "Preencha nome e e-mail.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    atualizarProfessor(emailAtual, novoNome, novoEmail);
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void atualizarProfessor(String emailAtual, String novoNome, String novoEmail) {
+        db.collection("grade")
+                .whereEqualTo("EmailProfessor", emailAtual)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    WriteBatch batch = db.batch();
+
+                    for (QueryDocumentSnapshot documento : queryDocumentSnapshots) {
+                        batch.update(documento.getReference(),
+                                "Professor", novoNome,
+                                "EmailProfessor", novoEmail
+                        );
+                    }
+
+                    batch.commit()
+                            .addOnSuccessListener(unused -> {
+                                Toast.makeText(this, "Professor atualizado!", Toast.LENGTH_SHORT).show();
+                                carregarProfessores();
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(this, "Erro ao atualizar: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                            );
+                });
+    }
+
+    private void abrirDialogAdicionarVinculo(String nomeProfessor, String emailProfessor) {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(30, 20, 30, 10);
+
+        EditText editCurso = criarCampo("Curso", "");
+        EditText editDisciplina = criarCampo("Matéria", "");
+        EditText editTurma = criarCampo("Turma", "");
+        EditText editTurno = criarCampo("Turno", "");
+
+        layout.addView(editCurso);
+        layout.addView(editDisciplina);
+        layout.addView(editTurma);
+        layout.addView(editTurno);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Adicionar vínculo")
+                .setView(layout)
+                .setPositiveButton("Adicionar", (dialog, which) -> {
+                    String curso = editCurso.getText().toString().trim();
+                    String disciplina = editDisciplina.getText().toString().trim();
+                    String turma = editTurma.getText().toString().trim();
+                    String turno = editTurno.getText().toString().trim();
+
+                    if (curso.isEmpty() || disciplina.isEmpty() || turma.isEmpty() || turno.isEmpty()) {
+                        Toast.makeText(this, "Preencha todos os campos.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    adicionarVinculo(nomeProfessor, emailProfessor, curso, disciplina, turma, turno);
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void adicionarVinculo(String nomeProfessor, String emailProfessor, String curso, String disciplina, String turma, String turno) {
+        DocumentReference ref = db.collection("grade").document();
+
+        Map<String, Object> dados = new HashMap<>();
+        dados.put("Professor", nomeProfessor);
+        dados.put("EmailProfessor", emailProfessor);
+        dados.put("Curso", curso);
+        dados.put("Disciplina", disciplina);
+        dados.put("Turma", turma);
+        dados.put("Turno", turno);
+
+        ref.set(dados)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, "Vínculo adicionado!", Toast.LENGTH_SHORT).show();
+                    carregarProfessores();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Erro ao adicionar vínculo: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                );
     }
 
     private void confirmarExclusao(String nome, String email) {
@@ -250,9 +425,6 @@ public class GerenciarProfessores extends AppCompatActivity {
                             .addOnFailureListener(e ->
                                     Toast.makeText(this, "Erro ao excluir: " + e.getMessage(), Toast.LENGTH_LONG).show()
                             );
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Erro ao buscar professor: " + e.getMessage(), Toast.LENGTH_LONG).show()
-                );
+                });
     }
 }
