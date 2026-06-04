@@ -10,44 +10,44 @@
         <item>Agroecologia</item>
         <item>Agropecuária</item>
     </string-array>
-        <string-array name="lista_dias">
-            <item>Selecione o dia da semana</item>
-            <item>Segunda-feira</item>
-            <item>Terça-feira</item>
-            <item>Quarta-feira</item>
-            <item>Quinta-feira</item>
-            <item>Sexta-feira</item>
-        </string-array>
+    <string-array name="lista_dias">
+        <item>Selecione o dia da semana</item>
+        <item>Segunda-feira</item>
+        <item>Terça-feira</item>
+        <item>Quarta-feira</item>
+        <item>Quinta-feira</item>
+        <item>Sexta-feira</item>
+    </string-array>
 
-        <string-array name="lista_inicio">
-            <item>Selecione o horário de início</item>
-            <item>07:30</item>
-            <item>08:20</item>
-            <item>09:30</item>
-        </string-array>
+    <string-array name="lista_inicio">
+        <item>Selecione o horário de início</item>
+        <item>07:30</item>
+        <item>08:20</item>
+        <item>09:30</item>
+    </string-array>
 
-        <string-array name="lista_termino">
-            <item>Selecione o horário de término</item>
-            <item>08:20</item>
-            <item>09:10</item>
-            <item>10:20</item>
-        </string-array>
+    <string-array name="lista_termino">
+        <item>Selecione o horário de término</item>
+        <item>08:20</item>
+        <item>09:10</item>
+        <item>10:20</item>
+    </string-array>
 
-        <string-array name="lista_disciplinas">
-            <item>Selecione a disciplina</item>
-            <item>Lógica de Programação</item>
-            <item>Redes de Computadores</item>
-        </string-array>
+    <string-array name="lista_disciplinas">
+        <item>Selecione a disciplina</item>
+        <item>Lógica de Programação</item>
+        <item>Redes de Computadores</item>
+    </string-array>
 
-        <string-array name="lista_professores">
-            <item>Selecione o professor(a)</item>
-            <item>Prof. Alan Turing</item>
-            <item>Profª. Ada Lovelace</item>
-        </string-array>
+    <string-array name="lista_professores">
+        <item>Selecione o professor(a)</item>
+        <item>Prof. Alan Turing</item>
+        <item>Profª. Ada Lovelace</item>
+    </string-array>
 
-        <string-array name="lista_salas">
-            <item>Selecione a sala (opcional)</item>
-            <item>Laboratório 01</item>
-            <item>Sala 05</item>
-        </string-array>
+    <string-array name="lista_salas">
+        <item>Selecione a sala (opcional)</item>
+        <item>Laboratório 01</item>
+        <item>Sala 05</item>
+    </string-array>
 </resources>

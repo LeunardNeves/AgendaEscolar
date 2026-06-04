@@ -1,6 +1,9 @@
 package com.example.horario;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +30,7 @@ public class CadastroProfessorActivity extends AppCompatActivity {
     private MaterialAutoCompleteTextView dropCurso, dropMateria;
     private Button btnVoltar, btnAdicionarVinculo, btnSalvar;
     private LinearLayout layoutVinculos;
+    private TextView textTotalVinculos;
 
     private FirebaseFirestore db;
 
@@ -50,15 +54,13 @@ public class CadastroProfessorActivity extends AppCompatActivity {
 
         editNomeProfessor = findViewById(R.id.editNomeProfessor);
         editEmailProfessor = findViewById(R.id.editEmailProfessor);
-
         dropCurso = findViewById(R.id.dropCurso);
         dropMateria = findViewById(R.id.dropMateria);
-
         btnVoltar = findViewById(R.id.btnVoltar);
         btnAdicionarVinculo = findViewById(R.id.btnAdicionarVinculo);
         btnSalvar = findViewById(R.id.btnSalvarProfessor);
-
         layoutVinculos = findViewById(R.id.layoutVinculos);
+        textTotalVinculos = findViewById(R.id.textTotalVinculos);
 
         btnVoltar.setOnClickListener(v -> finish());
 
@@ -84,7 +86,6 @@ public class CadastroProfessorActivity extends AppCompatActivity {
         });
 
         btnAdicionarVinculo.setOnClickListener(v -> adicionarVinculo());
-
         btnSalvar.setOnClickListener(v -> salvarNaGrade());
     }
 
@@ -111,11 +112,7 @@ public class CadastroProfessorActivity extends AppCompatActivity {
                     dropCurso.setAdapter(adapterCurso);
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(
-                                this,
-                                "Erro ao carregar cursos: " + e.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this, "Erro ao carregar cursos: " + e.getMessage(), Toast.LENGTH_LONG).show()
                 );
     }
 
@@ -155,11 +152,7 @@ public class CadastroProfessorActivity extends AppCompatActivity {
                     dropMateria.setAdapter(adapterMateria);
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(
-                                this,
-                                "Erro ao carregar matérias: " + e.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this, "Erro ao carregar matérias: " + e.getMessage(), Toast.LENGTH_LONG).show()
                 );
     }
 
@@ -202,33 +195,99 @@ public class CadastroProfessorActivity extends AppCompatActivity {
     private void mostrarVinculosNaTela() {
         layoutVinculos.removeAllViews();
 
+        int total = vinculosAdicionados.size();
+
+        if (total == 0) {
+            textTotalVinculos.setText("0 vínculo");
+
+            TextView vazio = new TextView(this);
+            vazio.setText("Nenhum vínculo adicionado ainda.");
+            vazio.setTextColor(Color.parseColor("#8F9BBC"));
+            vazio.setTextSize(14);
+            vazio.setGravity(Gravity.CENTER);
+            vazio.setPadding(22, 22, 22, 22);
+            vazio.setBackgroundResource(R.drawable.bg_vinculo_vazio);
+
+            layoutVinculos.addView(vazio);
+            return;
+        }
+
+        if (total == 1) {
+            textTotalVinculos.setText("1 vínculo");
+        } else {
+            textTotalVinculos.setText(total + " vínculos");
+        }
+
         for (int i = 0; i < vinculosAdicionados.size(); i++) {
+            final int posicao = i;
             Map<String, String> vinculo = vinculosAdicionados.get(i);
 
-            TextView textView = new TextView(this);
-            textView.setText(
-                    (i + 1) + ". "
-                            + vinculo.get("disciplina")
-                            + " | "
-                            + vinculo.get("curso")
-                            + " | "
-                            + vinculo.get("turno")
-            );
+            LinearLayout card = new LinearLayout(this);
+            card.setOrientation(LinearLayout.HORIZONTAL);
+            card.setGravity(Gravity.CENTER_VERTICAL);
+            card.setPadding(14, 14, 14, 14);
+            card.setBackgroundResource(R.drawable.bg_item_vinculo_moderno);
 
-            textView.setTextColor(getResources().getColor(android.R.color.white));
-            textView.setTextSize(14);
-            textView.setPadding(20, 15, 20, 15);
-            textView.setBackgroundResource(R.drawable.bg_item);
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
+            cardParams.setMargins(0, 0, 0, 14);
+            card.setLayoutParams(cardParams);
 
-            params.setMargins(0, 0, 0, 10);
-            textView.setLayoutParams(params);
+            TextView numero = new TextView(this);
+            numero.setText(String.valueOf(i + 1));
+            numero.setTextColor(Color.WHITE);
+            numero.setTextSize(16);
+            numero.setGravity(Gravity.CENTER);
+            numero.setTypeface(null, Typeface.BOLD);
+            numero.setBackgroundResource(R.drawable.bg_numero_vinculo);
 
-            layoutVinculos.addView(textView);
+            LinearLayout.LayoutParams numeroParams = new LinearLayout.LayoutParams(44, 44);
+            numeroParams.setMargins(0, 0, 14, 0);
+            numero.setLayoutParams(numeroParams);
+
+            LinearLayout textos = new LinearLayout(this);
+            textos.setOrientation(LinearLayout.VERTICAL);
+            textos.setLayoutParams(new LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1
+            ));
+
+            TextView disciplina = new TextView(this);
+            disciplina.setText(vinculo.get("disciplina"));
+            disciplina.setTextColor(Color.WHITE);
+            disciplina.setTextSize(15);
+            disciplina.setTypeface(null, Typeface.BOLD);
+
+            TextView cursoTurno = new TextView(this);
+            cursoTurno.setText(vinculo.get("curso") + "  |  " + vinculo.get("turno"));
+            cursoTurno.setTextColor(Color.parseColor("#16E0C4"));
+            cursoTurno.setTextSize(13);
+            cursoTurno.setPadding(0, 4, 0, 0);
+
+            textos.addView(disciplina);
+            textos.addView(cursoTurno);
+
+            TextView btnExcluir = new TextView(this);
+            btnExcluir.setText("🗑");
+            btnExcluir.setTextSize(22);
+            btnExcluir.setGravity(Gravity.CENTER);
+            btnExcluir.setTextColor(Color.parseColor("#FF6B6B"));
+            btnExcluir.setPadding(14, 8, 8, 8);
+
+            btnExcluir.setOnClickListener(v -> {
+                vinculosAdicionados.remove(posicao);
+                Toast.makeText(this, "Vínculo removido", Toast.LENGTH_SHORT).show();
+                mostrarVinculosNaTela();
+            });
+
+            card.addView(numero);
+            card.addView(textos);
+            card.addView(btnExcluir);
+
+            layoutVinculos.addView(card);
         }
     }
 
@@ -268,21 +327,12 @@ public class CadastroProfessorActivity extends AppCompatActivity {
 
         batch.commit()
                 .addOnSuccessListener(unused -> {
-                    Toast.makeText(
-                            this,
-                            "Professor salvo na grade com sucesso!",
-                            Toast.LENGTH_SHORT
-                    ).show();
-
+                    Toast.makeText(this, "Professor salvo na grade com sucesso!", Toast.LENGTH_SHORT).show();
                     limparCampos();
                     finish();
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(
-                                this,
-                                "Erro ao salvar na grade: " + e.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this, "Erro ao salvar na grade: " + e.getMessage(), Toast.LENGTH_LONG).show()
                 );
     }
 
@@ -297,6 +347,6 @@ public class CadastroProfessorActivity extends AppCompatActivity {
         turnoSelecionado = "";
 
         vinculosAdicionados.clear();
-        layoutVinculos.removeAllViews();
+        mostrarVinculosNaTela();
     }
 }

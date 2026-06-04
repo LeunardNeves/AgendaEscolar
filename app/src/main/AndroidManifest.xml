@@ -13,46 +13,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppHorarioEscolar">
-
+        <activity
+            android:name=".GerenciarProfessores"
+            android:exported="false" />
         <activity
             android:name=".novo_horario"
             android:exported="false" />
-
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
-
         <activity
             android:name=".GradeHorarioActivity"
             android:exported="false" />
-
         <activity
             android:name=".CadastroProfessorActivity"
             android:exported="false" />
-
         <activity
             android:name=".SecretariaActivity"
             android:exported="false" />
-
         <activity
             android:name=".GestaoAvisosActivity"
             android:exported="false" />
-
         <activity
             android:name=".AlunoActivity"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
     </application>
 
 </manifest>
