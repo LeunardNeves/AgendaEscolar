@@ -38,75 +38,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="70dp"
                 android:text="AVISOS"
                 android:textColor="#FFFFFF"
-                android:textSize="28sp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="22dp"
-            android:background="#1E3A8A" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_marginBottom="26dp"
-            android:background="@drawable/bg_card_vinculos_moderno"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="18dp">
-
-            <TextView
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:background="@drawable/bg_icon_vinculo"
-                android:gravity="center"
-                android:text="📢"
-                android:textSize="24sp" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Central de Comunicados"
-                    android:textColor="#FFFFFF"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textResumoAvisos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Publique e acompanhe os avisos da escola"
-                    android:textColor="#AEB9D8"
-                    android:textSize="13sp" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textTotalAvisos"
-                android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:background="@drawable/bg_badge_vinculo"
-                android:gravity="center"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:text="0 avisos"
-                android:textColor="#16E0C4"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -185,7 +124,7 @@
                 android:layout_width="0dp"
                 android:layout_height="55dp"
                 android:layout_weight="1"
-                android:buttonTint="#7B61FF"
+                android:buttonTint="#2563EB"
                 android:checked="true"
                 android:text="NORMAL"
                 android:textColor="#FFFFFF"
@@ -196,7 +135,7 @@
                 android:layout_width="0dp"
                 android:layout_height="55dp"
                 android:layout_weight="1"
-                android:buttonTint="#E84142"
+                android:buttonTint="#2563EB"
                 android:text="URGENTE"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
@@ -206,20 +145,41 @@
             android:id="@+id/btnPublicar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:backgroundTint="#7B61FF"
+            android:background="@drawable/bg_btn_publicar"
             android:text="PUBLICAR AVISO"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="AVISOS PUBLICADOS"
-            android:textColor="#DFDFEB"
-            android:textSize="18sp"
-            android:textStyle="bold"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="AVISOS PUBLICADOS"
+                android:textColor="#DFDFEB"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textTotalAvisos"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_badge_vinculo"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="0 avisos"
+                android:textColor="#16E0C4"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -252,7 +212,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="12dp"
-            android:backgroundTint="#081B55"
+            android:background="@drawable/bg_btn_painel"
             android:text="IR PARA PAINEL ADMINISTRATIVO"
             android:textColor="#DFDFEB"
             android:textStyle="bold" />

@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class CadastroProfessorActivity extends AppCompatActivity {
 
-    private EditText editNomeProfessor, editEmailProfessor;
+    private EditText editNomeProfessor;
     private MaterialAutoCompleteTextView dropCurso, dropMateria;
     private Button btnVoltar, btnAdicionarVinculo, btnSalvar;
     private LinearLayout layoutVinculos;
@@ -53,7 +53,6 @@ public class CadastroProfessorActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         editNomeProfessor = findViewById(R.id.editNomeProfessor);
-        editEmailProfessor = findViewById(R.id.editEmailProfessor);
         dropCurso = findViewById(R.id.dropCurso);
         dropMateria = findViewById(R.id.dropMateria);
         btnVoltar = findViewById(R.id.btnVoltar);
@@ -212,11 +211,7 @@ public class CadastroProfessorActivity extends AppCompatActivity {
             return;
         }
 
-        if (total == 1) {
-            textTotalVinculos.setText("1 vínculo");
-        } else {
-            textTotalVinculos.setText(total + " vínculos");
-        }
+        textTotalVinculos.setText(total == 1 ? "1 vínculo" : total + " vínculos");
 
         for (int i = 0; i < vinculosAdicionados.size(); i++) {
             final int posicao = i;
@@ -293,15 +288,9 @@ public class CadastroProfessorActivity extends AppCompatActivity {
 
     private void salvarNaGrade() {
         String nomeProfessor = editNomeProfessor.getText().toString().trim();
-        String emailProfessor = editEmailProfessor.getText().toString().trim();
 
         if (nomeProfessor.isEmpty()) {
             editNomeProfessor.setError("Digite o nome do professor");
-            return;
-        }
-
-        if (emailProfessor.isEmpty()) {
-            editEmailProfessor.setError("Digite o e-mail/login");
             return;
         }
 
@@ -320,7 +309,6 @@ public class CadastroProfessorActivity extends AppCompatActivity {
             dadosGrade.put("Disciplina", vinculo.get("disciplina"));
             dadosGrade.put("Turno", vinculo.get("turno"));
             dadosGrade.put("Professor", nomeProfessor);
-            dadosGrade.put("EmailProfessor", emailProfessor);
 
             batch.set(gradeRef, dadosGrade);
         }
@@ -338,7 +326,6 @@ public class CadastroProfessorActivity extends AppCompatActivity {
 
     private void limparCampos() {
         editNomeProfessor.setText("");
-        editEmailProfessor.setText("");
         dropCurso.setText("");
         dropMateria.setText("");
 

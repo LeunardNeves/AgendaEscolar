@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#020A22"
@@ -12,37 +11,37 @@
         android:orientation="vertical"
         android:padding="22dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnVoltar"
-            android:layout_width="140dp"
-            android:layout_height="52dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_btn_voltar"
-            android:text="VOLTAR"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:cornerRadius="26dp"
-            app:icon="@drawable/ic_arrow_back_custom"
-            app:iconGravity="textStart"
-            app:iconPadding="8dp"
-            app:iconTint="#FFFFFF" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-            android:text="GERENCIAR\nPROFESSORES"
-            android:textColor="#FFFFFF"
-            android:textSize="25sp"
-            android:textStyle="bold" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnVoltar"
+                android:layout_width="95dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_btn_voltar"
+                android:text="‹  VOLTAR"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="GERENCIAR\nPROFESSORES"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textTotalProfessores"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="38dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:background="@drawable/bg_badge_vinculo"
@@ -51,7 +50,7 @@
             android:paddingEnd="18dp"
             android:text="0 professores"
             android:textColor="#16E0C4"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -62,5 +61,4 @@
             android:orientation="vertical" />
 
     </LinearLayout>
-
 </ScrollView>
