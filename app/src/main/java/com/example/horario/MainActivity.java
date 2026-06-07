@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 
 public class MainActivity extends AppCompatActivity {
@@ -88,12 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
 
-                    Toast.makeText(
-                            MainActivity.this,
-                            "Documentos encontrados: " + queryDocumentSnapshots.size(),
-                            Toast.LENGTH_LONG
-                    ).show();
-
                     LinkedHashSet<String> listaCursos = new LinkedHashSet<>();
                     LinkedHashSet<String> listaAnos = new LinkedHashSet<>();
                     LinkedHashSet<String> listaTurnos = new LinkedHashSet<>();
@@ -102,18 +97,20 @@ public class MainActivity extends AppCompatActivity {
                         String cursoCompleto = document.getString("Curso");
                         String turno = document.getString("Turno");
 
-                        if (cursoCompleto != null && !cursoCompleto.isEmpty()) {
+                        if (cursoCompleto != null && !cursoCompleto.trim().isEmpty()) {
                             String ano = extrairAno(cursoCompleto);
                             String nomeCurso = removerAno(cursoCompleto);
 
-                            listaCursos.add(nomeCurso);
+                            if (!nomeCurso.trim().isEmpty()) {
+                                listaCursos.add(nomeCurso);
+                            }
 
-                            if (!ano.isEmpty()) {
+                            if (!ano.trim().isEmpty()) {
                                 listaAnos.add(ano);
                             }
                         }
 
-                        if (turno != null && !turno.isEmpty()) {
+                        if (turno != null && !turno.trim().isEmpty()) {
                             listaTurnos.add(turno);
                         }
                     }
@@ -122,10 +119,14 @@ public class MainActivity extends AppCompatActivity {
                     anos = listaAnos.toArray(new String[0]);
                     turnos = listaTurnos.toArray(new String[0]);
 
+                    Arrays.sort(cursos);
+                    Arrays.sort(anos);
+                    Arrays.sort(turnos);
+
                     if (cursos.length > 0 && anos.length > 0 && turnos.length > 0) {
                         Toast.makeText(MainActivity.this, "Dados carregados com sucesso!", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(MainActivity.this, "Dados encontrados, mas campos vazios. Verifique Curso e Turno.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Verifique se a coleção grade possui Curso e Turno.", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String extrairAno(String cursoCompleto) {
-        String[] partes = cursoCompleto.split(" ");
+        String[] partes = cursoCompleto.trim().split(" ");
 
         if (partes.length > 0) {
             String ultimaParte = partes[partes.length - 1];
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String removerAno(String cursoCompleto) {
-        return cursoCompleto.replaceAll("\\s\\d{4}$", "");
+        return cursoCompleto.trim().replaceAll("\\s\\d{4}$", "");
     }
 
     private void mostrarDialogo(TextView campoTexto, String titulo, String[] itens) {
@@ -162,11 +163,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
         builder.setTitle(titulo);
+
         builder.setItems(itens, (dialog, which) -> {
             campoTexto.setText(itens[which]);
             campoTexto.setTextColor(0xFFFFFFFF);
         });
+
         builder.show();
     }
 }

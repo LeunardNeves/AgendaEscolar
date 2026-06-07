@@ -78,11 +78,13 @@
             android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_calendar"
                 app:tint="@color/electric_blue" />
+
             <TextView
                 android:id="@+id/txtDiaSemana"
                 android:layout_width="0dp"
@@ -92,6 +94,7 @@
                 android:text="Selecione o dia da semana"
                 android:textColor="@color/text_white"
                 android:textSize="14sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -119,11 +122,13 @@
             android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_recent_history"
                 app:tint="@color/electric_blue" />
+
             <TextView
                 android:id="@+id/txtInicio"
                 android:layout_width="0dp"
@@ -133,6 +138,7 @@
                 android:text="Selecione o horário de início"
                 android:textColor="@color/text_white"
                 android:textSize="14sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -160,11 +166,13 @@
             android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_recent_history"
                 app:tint="@color/electric_blue" />
+
             <TextView
                 android:id="@+id/txtTermino"
                 android:layout_width="0dp"
@@ -174,6 +182,51 @@
                 android:text="Selecione o horário de término"
                 android:textColor="@color/text_white"
                 android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▼"
+                android:textColor="@color/electric_blue"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CURSO"
+            android:textColor="@color/text_white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutCurso"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/bg_item"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="15dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_school"
+                app:tint="@color/electric_blue" />
+
+            <TextView
+                android:id="@+id/txtCurso"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="Selecione o curso"
+                android:textColor="@color/text_white"
+                android:textSize="14sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -201,11 +254,13 @@
             android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_school"
                 app:tint="@color/electric_blue" />
+
             <TextView
                 android:id="@+id/txtDisciplina"
                 android:layout_width="0dp"
@@ -215,6 +270,7 @@
                 android:text="Selecione a disciplina"
                 android:textColor="@color/text_white"
                 android:textSize="14sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -239,14 +295,16 @@
             android:background="@drawable/bg_item"
             android:gravity="center_vertical"
             android:paddingHorizontal="15dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:clickable="true"
             android:focusable="true">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_person"
                 app:tint="@color/electric_blue" />
+
             <TextView
                 android:id="@+id/txtProfessor"
                 android:layout_width="0dp"
@@ -256,75 +314,13 @@
                 android:text="Selecione o professor(a)"
                 android:textColor="@color/text_white"
                 android:textSize="14sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="▼"
                 android:textColor="@color/electric_blue"
                 android:textSize="16sp" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SALA (OPCIONAL)"
-            android:textColor="@color/text_white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <LinearLayout
-            android:id="@+id/layoutSala"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@drawable/bg_item"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="15dp"
-            android:layout_marginBottom="20dp"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_casa"
-                app:tint="@color/electric_blue" />
-            <TextView
-                android:id="@+id/txtSala"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                android:text="Selecione a sala (opcional)"
-                android:textColor="@color/text_white"
-                android:textSize="14sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="▼"
-                android:textColor="@color/electric_blue"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="COR DO HORÁRIO"
-            android:textColor="@color/text_white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="24dp">
-            <View android:layout_width="32dp" android:layout_height="32dp" android:background="@android:color/holo_blue_light" android:layout_marginEnd="12dp"/>
-            <View android:layout_width="32dp" android:layout_height="32dp" android:background="@android:color/holo_green_light" android:layout_marginEnd="12dp"/>
-            <View android:layout_width="32dp" android:layout_height="32dp" android:background="@android:color/holo_red_light" android:layout_marginEnd="12dp"/>
-            <View android:layout_width="32dp" android:layout_height="32dp" android:background="@android:color/holo_orange_light" android:layout_marginEnd="12dp"/>
-            <View android:layout_width="32dp" android:layout_height="32dp" android:background="@android:color/holo_purple" />
         </LinearLayout>
 
         <LinearLayout
@@ -336,29 +332,33 @@
             android:padding="16dp"
             android:layout_marginBottom="24dp"
             android:gravity="center_vertical">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_dialog_info"
                 app:tint="@color/electric_blue" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginStart="12dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="DICA"
                     android:textColor="@color/electric_blue"
                     android:textStyle="bold"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Você pode identificar seus horários por cores para deixar sua grade mais organizada."
+                    android:text="Você pode organizar os horários por curso, disciplina e professor."
                     android:textColor="#9FA8DA"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
 

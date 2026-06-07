@@ -41,17 +41,31 @@
                 android:id="@+id/btnMenu"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:background="@drawable/bg_icon_grade"
                 android:gravity="center"
-                android:text="⋮"
+                android:text="+"
                 android:textColor="#FFFFFF"
                 android:textSize="30sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <EditText
+            android:id="@+id/editPesquisar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/bg_input_neon"
+            android:hint="Pesquisar por matéria ou professor..."
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8F9BBC"
+            android:textSize="14sp" />
+
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:scrollbars="none">
 
             <LinearLayout

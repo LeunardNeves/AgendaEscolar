@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,10 +31,13 @@ public class GradeHorarioActivity extends AppCompatActivity {
 
     private Button btnVoltar;
     private TextView btnMenu;
+    private EditText editPesquisar;
     private LinearLayout layoutDias, layoutHorarios;
     private FirebaseFirestore db;
 
     private String diaSelecionado = "SEG";
+    private String textoPesquisa = "";
+
     private final String[] dias = {"SEG", "TER", "QUA", "QUI", "SEX"};
 
     @Override
@@ -45,21 +50,31 @@ public class GradeHorarioActivity extends AppCompatActivity {
 
         btnVoltar = findViewById(R.id.btnVoltar);
         btnMenu = findViewById(R.id.btnMenu);
+        editPesquisar = findViewById(R.id.editPesquisar);
         layoutDias = findViewById(R.id.layoutDias);
         layoutHorarios = findViewById(R.id.layoutHorarios);
 
         btnVoltar.setOnClickListener(v -> finish());
 
         btnMenu.setOnClickListener(v -> {
-            PopupMenu menu = new PopupMenu(this, btnMenu);
-            menu.getMenu().add("Novo horário");
+            Intent intent = new Intent(this, novo_horario.class);
+            startActivity(intent);
+        });
 
-            menu.setOnMenuItemClickListener(item -> {
-                startActivity(new Intent(this, novo_horario.class));
-                return true;
-            });
+        editPesquisar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-            menu.show();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                textoPesquisa = s.toString().trim().toLowerCase();
+                carregarGrade();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         criarBotoesDias();
@@ -120,12 +135,25 @@ public class GradeHorarioActivity extends AppCompatActivity {
                             continue;
                         }
 
+                        String disciplina = pegarCampo(doc, "Disciplina", "disciplina", "materia", "Materia");
+                        String professor = pegarCampo(doc, "Professor", "professor", "professorNome", "ProfessorNome");
+
+                        if (!textoPesquisa.isEmpty()) {
+                            String disciplinaLower = disciplina.toLowerCase();
+                            String professorLower = professor.toLowerCase();
+
+                            if (!disciplinaLower.contains(textoPesquisa)
+                                    && !professorLower.contains(textoPesquisa)) {
+                                continue;
+                            }
+                        }
+
                         Map<String, String> item = new HashMap<>();
                         item.put("id", doc.getId());
                         item.put("Dia", dia);
                         item.put("Horario", pegarCampo(doc, "Horario"));
-                        item.put("Disciplina", pegarCampo(doc, "Disciplina", "disciplina", "materia", "Materia"));
-                        item.put("Professor", pegarCampo(doc, "Professor", "professor", "professorNome", "ProfessorNome"));
+                        item.put("Disciplina", disciplina);
+                        item.put("Professor", professor);
                         item.put("Sala", pegarCampo(doc, "Sala", "sala"));
 
                         lista.add(item);
@@ -135,7 +163,13 @@ public class GradeHorarioActivity extends AppCompatActivity {
 
                     if (lista.isEmpty()) {
                         TextView vazio = new TextView(this);
-                        vazio.setText("Nenhum horário cadastrado para esse dia.");
+
+                        if (textoPesquisa.isEmpty()) {
+                            vazio.setText("Nenhum horário cadastrado para esse dia.");
+                        } else {
+                            vazio.setText("Nenhum resultado encontrado.");
+                        }
+
                         vazio.setTextColor(Color.WHITE);
                         vazio.setTextSize(15);
                         vazio.setGravity(Gravity.CENTER);
