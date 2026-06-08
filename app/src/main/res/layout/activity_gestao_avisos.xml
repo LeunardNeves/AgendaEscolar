@@ -12,48 +12,45 @@
         android:orientation="vertical"
         android:padding="22dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginBottom="20dp">
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnVoltar"
-                android:layout_width="140dp"
-                android:layout_height="52dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/bg_btn_voltar"
+                android:layout_width="135dp"
+                android:layout_height="48dp"
                 android:text="VOLTAR"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                app:cornerRadius="26dp"
-                app:icon="@drawable/ic_arrow_back_custom"
-                app:iconGravity="textStart"
-                app:iconPadding="8dp"
-                app:iconTint="#FFFFFF" />
+                app:backgroundTint="#071642"
+                app:cornerRadius="24dp"
+                app:strokeColor="#2962FF"
+                app:strokeWidth="1dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="70dp"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:text="AVISOS"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
-        </RelativeLayout>
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="12dp"
             android:text="TÍTULO DO AVISO"
             android:textColor="#DFDFEB"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
+            android:textStyle="bold" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -78,10 +75,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:text="CONTEÚDO DO AVISO"
             android:textColor="#DFDFEB"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
+            android:textStyle="bold" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -107,10 +104,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:text="SELECIONE O TIPO DE AVISO"
             android:textColor="#DFDFEB"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
+            android:textStyle="bold" />
 
         <RadioGroup
             android:id="@+id/radioTipoAviso"
@@ -218,4 +215,5 @@
             android:textStyle="bold" />
 
     </LinearLayout>
+
 </ScrollView>

@@ -1,12 +1,16 @@
 package com.example.horario;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
+import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -24,6 +28,11 @@ import java.util.ArrayList;
 
 public class AlunoActivity extends AppCompatActivity {
 
+    private static final String PREF_ALUNO = "dados_aluno";
+    private static final String KEY_CURSO = "curso";
+    private static final String KEY_ANO = "ano";
+    private static final String KEY_TURNO = "turno";
+
     private String curso, ano, turno, cursoCompleto;
 
     private TextView txtInfoAluno, txtTituloAviso, txtDescricaoAviso, txtDataAviso;
@@ -37,23 +46,51 @@ public class AlunoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aluno);
 
-        receberDados();
+        receberOuCarregarDadosSalvos();
         inicializarComponentes();
         configurarTela();
         configurarCliques();
         carregarAviso();
     }
 
-    private void receberDados() {
+    private void receberOuCarregarDadosSalvos() {
         curso = getIntent().getStringExtra("curso");
         ano = getIntent().getStringExtra("ano");
         turno = getIntent().getStringExtra("turno");
+
+        if (curso != null && ano != null && turno != null
+                && !curso.trim().isEmpty()
+                && !ano.trim().isEmpty()
+                && !turno.trim().isEmpty()) {
+
+            curso = curso.trim();
+            ano = ano.trim();
+            turno = turno.trim();
+
+            salvarFiltroAluno(curso, ano, turno);
+
+        } else {
+            SharedPreferences preferences = getSharedPreferences(PREF_ALUNO, MODE_PRIVATE);
+
+            curso = preferences.getString(KEY_CURSO, "");
+            ano = preferences.getString(KEY_ANO, "");
+            turno = preferences.getString(KEY_TURNO, "");
+        }
 
         if (curso == null) curso = "";
         if (ano == null) ano = "";
         if (turno == null) turno = "";
 
         cursoCompleto = curso + " " + ano;
+    }
+
+    private void salvarFiltroAluno(String curso, String ano, String turno) {
+        getSharedPreferences(PREF_ALUNO, MODE_PRIVATE)
+                .edit()
+                .putString(KEY_CURSO, curso)
+                .putString(KEY_ANO, ano)
+                .putString(KEY_TURNO, turno)
+                .apply();
     }
 
     private void inicializarComponentes() {
@@ -118,7 +155,7 @@ public class AlunoActivity extends AppCompatActivity {
                         String data = avisoPrioritario.getString("data");
                         Boolean urgente = avisoPrioritario.getBoolean("urgente");
 
-                        String tipo = Boolean.TRUE.equals(urgente) ? "🔴 URGENTE" : "🔵 NORMAL";
+                        String tipo = Boolean.TRUE.equals(urgente) ? "URGENTE" : "NORMAL";
 
                         txtTituloAviso.setText(tipo + " - " + valorSeguro(titulo));
                         txtDescricaoAviso.setText(valorSeguro(descricao));
@@ -141,15 +178,15 @@ public class AlunoActivity extends AppCompatActivity {
             txtTituloAviso.setTextColor(Color.parseColor("#FF6B6B"));
             txtDescricaoAviso.setTextColor(Color.WHITE);
             txtDataAviso.setTextColor(Color.parseColor("#FFB4B4"));
-            warn.setImageResource(android.R.drawable.ic_dialog_alert);
-            warn.setColorFilter(Color.parseColor("#FF4444"));
+            warn.setImageResource(R.drawable.ic_warning_custom);
+            warn.setColorFilter(Color.parseColor("#FF5C5C"));
         } else {
             cardAviso.setCardBackgroundColor(Color.parseColor("#081B55"));
-            txtTituloAviso.setTextColor(Color.parseColor("#16E0C4"));
+            txtTituloAviso.setTextColor(Color.parseColor("#7B61FF"));
             txtDescricaoAviso.setTextColor(Color.WHITE);
             txtDataAviso.setTextColor(Color.parseColor("#AEB9D8"));
-            warn.setImageResource(android.R.drawable.ic_dialog_info);
-            warn.setColorFilter(Color.parseColor("#16E0C4"));
+            warn.setImageResource(R.drawable.ic_info_custom);
+            warn.setColorFilter(Color.parseColor("#7B61FF"));
         }
     }
 
@@ -159,7 +196,7 @@ public class AlunoActivity extends AppCompatActivity {
         db.collection("avisos")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    ArrayList<String> avisos = new ArrayList<>();
+                    ArrayList<AvisoItem> avisos = new ArrayList<>();
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String titulo = document.getString("titulo");
@@ -167,14 +204,12 @@ public class AlunoActivity extends AppCompatActivity {
                         String data = document.getString("data");
                         Boolean urgente = document.getBoolean("urgente");
 
-                        String tipo = Boolean.TRUE.equals(urgente) ? "🔴 URGENTE" : "🔵 NORMAL";
-
-                        avisos.add(
-                                tipo + "\n\n" +
-                                        "Título: " + valorSeguro(titulo) + "\n\n" +
-                                        "Descrição: " + valorSeguro(descricao) + "\n\n" +
-                                        "Data: " + valorSeguro(data)
-                        );
+                        avisos.add(new AvisoItem(
+                                valorSeguro(titulo),
+                                valorSeguro(descricao),
+                                valorSeguro(data),
+                                Boolean.TRUE.equals(urgente)
+                        ));
                     }
 
                     if (avisos.isEmpty()) {
@@ -197,18 +232,18 @@ public class AlunoActivity extends AppCompatActivity {
                 .whereEqualTo("Dia", dia)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    ArrayList<String> horarios = new ArrayList<>();
+                    ArrayList<AulaHorario> horarios = new ArrayList<>();
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String horario = document.getString("Horario");
                         String disciplina = document.getString("Disciplina");
                         String professor = document.getString("Professor");
 
-                        horarios.add(
-                                "Horário: " + valorSeguro(horario) + "\n\n" +
-                                        "Matéria: " + valorSeguro(disciplina) + "\n\n" +
-                                        "Professor: " + valorSeguro(professor)
-                        );
+                        horarios.add(new AulaHorario(
+                                valorSeguro(horario),
+                                valorSeguro(disciplina),
+                                valorSeguro(professor)
+                        ));
                     }
 
                     if (horarios.isEmpty()) {
@@ -222,15 +257,7 @@ public class AlunoActivity extends AppCompatActivity {
                 );
     }
 
-    private void mostrarDialogoAvisos(ArrayList<String> avisos) {
-        mostrarDialogoPersonalizado("📢 Avisos", avisos);
-    }
-
-    private void mostrarDialogoHorario(String dia, ArrayList<String> horarios) {
-        mostrarDialogoPersonalizado("📅 Horário de " + dia, horarios);
-    }
-
-    private void mostrarDialogoPersonalizado(String tituloTexto, ArrayList<String> itens) {
+    private void mostrarDialogoAvisos(ArrayList<AvisoItem> avisos) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -238,95 +265,86 @@ public class AlunoActivity extends AppCompatActivity {
 
         LinearLayout container = new LinearLayout(this);
         container.setOrientation(LinearLayout.VERTICAL);
-        container.setPadding(45, 40, 45, 40);
+        container.setPadding(dp(28), dp(26), dp(28), dp(28));
+        container.setBackground(criarFundo("#07163D", "#2563EB", 34));
 
-        GradientDrawable fundo = new GradientDrawable();
-        fundo.setColor(Color.parseColor("#07163D"));
-        fundo.setCornerRadius(38);
-        fundo.setStroke(2, Color.parseColor("#263B7A"));
-        container.setBackground(fundo);
+        LinearLayout topo = new LinearLayout(this);
+        topo.setOrientation(LinearLayout.HORIZONTAL);
+        topo.setGravity(Gravity.CENTER_VERTICAL);
 
         TextView titulo = new TextView(this);
-        titulo.setText(tituloTexto);
+        titulo.setText("Avisos");
         titulo.setTextColor(Color.WHITE);
         titulo.setTextSize(24);
         titulo.setTypeface(null, Typeface.BOLD);
-        titulo.setPadding(0, 0, 0, 28);
-        container.addView(titulo);
 
-        for (String item : itens) {
-            TextView card = new TextView(this);
-            card.setText(item);
-            card.setTextColor(Color.WHITE);
-            card.setTextSize(16);
-            card.setPadding(30, 25, 30, 25);
+        topo.addView(titulo, new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                1
+        ));
 
-            boolean urgente = item.startsWith("🔴");
+        ImageButton btnX = new ImageButton(this);
+        btnX.setImageResource(R.drawable.ic_close_custom);
+        btnX.setColorFilter(Color.WHITE);
+        btnX.setBackgroundColor(Color.TRANSPARENT);
+        btnX.setPadding(dp(10), dp(10), dp(10), dp(10));
+        btnX.setOnClickListener(v -> dialog.dismiss());
 
-            GradientDrawable bgCard;
+        topo.addView(btnX, new LinearLayout.LayoutParams(dp(48), dp(48)));
+        container.addView(topo);
 
-            if (urgente) {
-                bgCard = new GradientDrawable(
-                        GradientDrawable.Orientation.LEFT_RIGHT,
-                        new int[]{
-                                Color.parseColor("#7A1010"),
-                                Color.parseColor("#0B1B4D")
-                        }
-                );
-                bgCard.setStroke(2, Color.parseColor("#FF4444"));
-            } else {
-                bgCard = new GradientDrawable(
-                        GradientDrawable.Orientation.LEFT_RIGHT,
-                        new int[]{
-                                Color.parseColor("#5B2EFF"),
-                                Color.parseColor("#0B1B4D")
-                        }
-                );
-                bgCard.setStroke(1, Color.parseColor("#314D9B"));
-            }
+        for (AvisoItem aviso : avisos) {
+            LinearLayout card = new LinearLayout(this);
+            card.setOrientation(LinearLayout.VERTICAL);
+            card.setPadding(dp(20), dp(18), dp(20), dp(18));
 
-            bgCard.setCornerRadius(26);
-            card.setBackground(bgCard);
+            card.setBackground(
+                    aviso.urgente
+                            ? criarFundo("#4A0E0E", "#FF5C5C", 24)
+                            : criarFundo("#081B55", "#2563EB", 24)
+            );
+
+            TextView tipo = new TextView(this);
+            tipo.setText(aviso.urgente ? "URGENTE" : "NORMAL");
+            tipo.setTextColor(aviso.urgente ? Color.parseColor("#FF6B6B") : Color.parseColor("#7B61FF"));
+            tipo.setTextSize(12);
+            tipo.setTypeface(null, Typeface.BOLD);
+
+            TextView tituloAviso = new TextView(this);
+            tituloAviso.setText(aviso.titulo);
+            tituloAviso.setTextColor(Color.WHITE);
+            tituloAviso.setTextSize(17);
+            tituloAviso.setTypeface(null, Typeface.BOLD);
+            tituloAviso.setPadding(0, dp(6), 0, dp(6));
+
+            TextView descricao = new TextView(this);
+            descricao.setText(aviso.descricao);
+            descricao.setTextColor(Color.WHITE);
+            descricao.setTextSize(14);
+
+            TextView data = new TextView(this);
+            data.setText(aviso.data);
+            data.setTextColor(Color.parseColor("#AEB9D8"));
+            data.setTextSize(12);
+            data.setGravity(Gravity.END);
+            data.setPadding(0, dp(8), 0, 0);
+
+            card.addView(tipo);
+            card.addView(tituloAviso);
+            card.addView(descricao);
+            card.addView(data);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(0, 0, 0, 18);
-            card.setLayoutParams(params);
+            params.setMargins(0, dp(16), 0, 0);
 
-            container.addView(card);
+            container.addView(card, params);
         }
 
-        Button btnFechar = new Button(this);
-        btnFechar.setText("✓ Fechar");
-        btnFechar.setTextSize(18);
-        btnFechar.setTextColor(Color.WHITE);
-        btnFechar.setAllCaps(false);
-
-        GradientDrawable bgBotao = new GradientDrawable(
-                GradientDrawable.Orientation.LEFT_RIGHT,
-                new int[]{
-                        Color.parseColor("#6C35FF"),
-                        Color.parseColor("#332DCC")
-                }
-        );
-
-        bgBotao.setCornerRadius(60);
-        btnFechar.setBackground(bgBotao);
-
-        LinearLayout.LayoutParams paramsBotao = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                110
-        );
-        paramsBotao.setMargins(0, 15, 0, 0);
-        btnFechar.setLayoutParams(paramsBotao);
-
-        btnFechar.setOnClickListener(v -> dialog.dismiss());
-
-        container.addView(btnFechar);
         scrollView.addView(container);
-
         dialog.setContentView(scrollView);
 
         Window window = dialog.getWindow();
@@ -335,6 +353,134 @@ public class AlunoActivity extends AppCompatActivity {
         }
 
         dialog.show();
+
+        Window janela = dialog.getWindow();
+        if (janela != null) {
+            janela.setLayout(
+                    (int) (getResources().getDisplayMetrics().widthPixels * 0.92),
+                    WindowManager.LayoutParams.WRAP_CONTENT
+            );
+        }
+    }
+
+    private void mostrarDialogoHorario(String dia, ArrayList<AulaHorario> horarios) {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setPadding(dp(28), dp(26), dp(28), dp(28));
+        container.setBackground(criarFundo("#07163D", "#2563EB", 34));
+
+        LinearLayout topo = new LinearLayout(this);
+        topo.setOrientation(LinearLayout.HORIZONTAL);
+        topo.setGravity(Gravity.CENTER_VERTICAL);
+
+        TextView titulo = new TextView(this);
+        titulo.setText("Horário de " + dia);
+        titulo.setTextColor(Color.WHITE);
+        titulo.setTextSize(23);
+        titulo.setTypeface(null, Typeface.BOLD);
+
+        topo.addView(titulo, new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                1
+        ));
+
+        ImageButton btnX = new ImageButton(this);
+        btnX.setImageResource(R.drawable.ic_close_custom);
+        btnX.setColorFilter(Color.WHITE);
+        btnX.setBackgroundColor(Color.TRANSPARENT);
+        btnX.setPadding(dp(10), dp(10), dp(10), dp(10));
+        btnX.setOnClickListener(v -> dialog.dismiss());
+
+        topo.addView(btnX, new LinearLayout.LayoutParams(dp(48), dp(48)));
+        container.addView(topo);
+
+        ScrollView scrollView = new ScrollView(this);
+
+        LinearLayout lista = new LinearLayout(this);
+        lista.setOrientation(LinearLayout.VERTICAL);
+        lista.setPadding(0, dp(22), 0, 0);
+
+        for (AulaHorario aula : horarios) {
+            LinearLayout card = new LinearLayout(this);
+            card.setOrientation(LinearLayout.VERTICAL);
+            card.setPadding(dp(22), dp(20), dp(22), dp(20));
+            card.setBackground(criarFundo("#081B55", "#2563EB", 24));
+
+            LinearLayout linhaHorario = new LinearLayout(this);
+            linhaHorario.setOrientation(LinearLayout.HORIZONTAL);
+            linhaHorario.setGravity(Gravity.CENTER_VERTICAL);
+
+            ImageView icRelogio = new ImageView(this);
+            icRelogio.setImageResource(R.drawable.ic_clock_custom);
+            icRelogio.setColorFilter(Color.parseColor("#7B61FF"));
+
+            linhaHorario.addView(icRelogio, new LinearLayout.LayoutParams(dp(20), dp(20)));
+
+            TextView txtHorario = new TextView(this);
+            txtHorario.setText(aula.horario);
+            txtHorario.setTextColor(Color.parseColor("#7B61FF"));
+            txtHorario.setTextSize(17);
+            txtHorario.setTypeface(null, Typeface.BOLD);
+            txtHorario.setPadding(dp(8), 0, 0, 0);
+
+            linhaHorario.addView(txtHorario);
+
+            TextView txtDisciplina = new TextView(this);
+            txtDisciplina.setText(aula.disciplina);
+            txtDisciplina.setTextColor(Color.WHITE);
+            txtDisciplina.setTextSize(20);
+            txtDisciplina.setTypeface(null, Typeface.BOLD);
+            txtDisciplina.setPadding(0, dp(10), 0, dp(6));
+
+            TextView txtProfessor = new TextView(this);
+            txtProfessor.setText("Professor(a): " + aula.professor);
+            txtProfessor.setTextColor(Color.WHITE);
+            txtProfessor.setTextSize(15);
+
+            card.addView(linhaHorario);
+            card.addView(txtDisciplina);
+            card.addView(txtProfessor);
+
+            LinearLayout.LayoutParams paramsCard = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            paramsCard.setMargins(0, 0, 0, dp(14));
+
+            lista.addView(card, paramsCard);
+        }
+
+        scrollView.addView(lista);
+        container.addView(scrollView);
+
+        dialog.setContentView(container);
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        dialog.show();
+
+        Window janela = dialog.getWindow();
+        if (janela != null) {
+            janela.setLayout(
+                    (int) (getResources().getDisplayMetrics().widthPixels * 0.92),
+                    WindowManager.LayoutParams.WRAP_CONTENT
+            );
+        }
+    }
+
+    private GradientDrawable criarFundo(String corFundo, String corBorda, int raio) {
+        GradientDrawable fundo = new GradientDrawable();
+        fundo.setColor(Color.parseColor(corFundo));
+        fundo.setCornerRadius(dp(raio));
+        fundo.setStroke(dp(1), Color.parseColor(corBorda));
+        return fundo;
     }
 
     private String valorSeguro(String texto) {
@@ -342,5 +488,34 @@ public class AlunoActivity extends AppCompatActivity {
             return "Não informado";
         }
         return texto;
+    }
+
+    private int dp(int valor) {
+        return (int) (valor * getResources().getDisplayMetrics().density);
+    }
+
+    private static class AulaHorario {
+        String horario;
+        String disciplina;
+        String professor;
+        AulaHorario(String horario, String disciplina, String professor) {
+            this.horario = horario;
+            this.disciplina = disciplina;
+            this.professor = professor;
+        }
+    }
+
+    private static class AvisoItem {
+        String titulo;
+        String descricao;
+        String data;
+        boolean urgente;
+
+        AvisoItem(String titulo, String descricao, String data, boolean urgente) {
+            this.titulo = titulo;
+            this.descricao = descricao;
+            this.data = data;
+            this.urgente = urgente;
+        }
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#020A22"
@@ -13,19 +14,23 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnVoltar"
-                android:layout_width="95dp"
+                android:layout_width="130dp"
                 android:layout_height="48dp"
-                android:background="@drawable/bg_btn_voltar"
-                android:text="‹  VOLTAR"
+                android:text="VOLTAR"
+                android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="11sp"
-                android:textStyle="bold" />
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:backgroundTint="#071642"
+                app:cornerRadius="24dp"
+                app:strokeColor="#2962FF"
+                app:strokeWidth="1dp" />
 
             <TextView
                 android:layout_width="0dp"
@@ -38,22 +43,13 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="NOME DO PROFESSOR"
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
         <EditText
             android:id="@+id/editNomeProfessor"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/bg_input_neon"
-            android:hint="Digite o nome completo"
+            android:hint="Digite o nome do professor"
             android:inputType="textPersonName"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
@@ -65,11 +61,12 @@
             android:id="@+id/dropCurso"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/bg_input_neon"
-            android:hint="Selecione o curso"
+            android:hint="Pesquise ou selecione o curso/ano"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
+            android:singleLine="true"
             android:textColor="#FFFFFF"
             android:textColorHint="#8F9BBC"
             android:textSize="15sp" />
@@ -80,9 +77,52 @@
             android:layout_height="58dp"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_input_neon"
-            android:hint="Selecione a matéria"
+            android:hint="Pesquise ou selecione a matéria"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
+            android:singleLine="true"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8F9BBC"
+            android:textSize="15sp" />
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/dropTurno"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_input_neon"
+            android:hint="Pesquise ou selecione o turno"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:singleLine="true"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8F9BBC"
+            android:textSize="15sp" />
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/dropDia"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_input_neon"
+            android:hint="Pesquise ou selecione o dia"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:singleLine="true"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8F9BBC"
+            android:textSize="15sp" />
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/dropHorario"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_input_neon"
+            android:hint="Pesquise ou selecione o horário"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:singleLine="true"
             android:textColor="#FFFFFF"
             android:textColorHint="#8F9BBC"
             android:textSize="15sp" />
@@ -90,12 +130,15 @@
         <Button
             android:id="@+id/btnAdicionarVinculo"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
+            android:layout_height="64dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/bg_btn_verde"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="+ ADICIONAR VÍNCULO"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -106,62 +149,25 @@
             android:orientation="vertical"
             android:padding="18dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
-                    android:background="@drawable/bg_icon_vinculo"
-                    android:gravity="center"
-                    android:text="👥"
-                    android:textSize="22sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
-                    android:layout_weight="1"
-                    android:text="VÍNCULOS\nADICIONADOS"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textTotalVinculos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:background="@drawable/bg_badge_vinculo"
-                    android:gravity="center"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:text="0 vínculo"
-                    android:textColor="#16E0C4"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/textTotalVinculos"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_badge_vinculo"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="0 vínculo"
+                android:textColor="#16E0C4"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/layoutVinculos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textVinculoVazio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_vinculo_vazio"
-                    android:gravity="center"
-                    android:padding="24dp"
-                    android:text="Nenhum vínculo adicionado ainda."
-                    android:textColor="#8F9BBC"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                android:orientation="vertical" />
         </LinearLayout>
 
         <Button

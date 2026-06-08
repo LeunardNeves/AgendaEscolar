@@ -5,11 +5,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,12 +33,14 @@ import java.util.Map;
 
 public class GerenciarProfessores extends AppCompatActivity {
 
-    private Button btnVoltar;
+    private MaterialButton btnVoltar;
+    private EditText editPesquisarProfessor;
     private LinearLayout layoutProfessores;
     private TextView textTotalProfessores;
     private FirebaseFirestore db;
 
     private final ArrayList<Map<String, Object>> listaProfessores = new ArrayList<>();
+    private final ArrayList<Map<String, Object>> listaFiltradaProfessores = new ArrayList<>();
 
     private final int ID_BOTAO_MENU = 1001;
     private final int ID_BOTAO_EDITAR_VINCULO = 1002;
@@ -50,10 +55,24 @@ public class GerenciarProfessores extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         btnVoltar = findViewById(R.id.btnVoltar);
+        editPesquisarProfessor = findViewById(R.id.editPesquisarProfessor);
         layoutProfessores = findViewById(R.id.layoutProfessores);
         textTotalProfessores = findViewById(R.id.textTotalProfessores);
 
         btnVoltar.setOnClickListener(v -> finish());
+
+        editPesquisarProfessor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filtrarProfessores(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         carregarProfessores();
     }
@@ -87,6 +106,8 @@ public class GerenciarProfessores extends AppCompatActivity {
                         vinculo.put("curso", valorSeguro(documento.getString("Curso")));
                         vinculo.put("disciplina", valorSeguro(documento.getString("Disciplina")));
                         vinculo.put("turno", valorSeguro(documento.getString("Turno")));
+                        vinculo.put("dia", valorSeguro(documento.getString("Dia")));
+                        vinculo.put("horario", valorSeguro(documento.getString("Horario")));
 
                         if (!professoresUnicos.containsKey(chaveProfessor)) {
                             Map<String, Object> professor = new HashMap<>();
@@ -114,28 +135,49 @@ public class GerenciarProfessores extends AppCompatActivity {
                     }
 
                     listaProfessores.addAll(professoresUnicos.values());
-                    mostrarProfessoresNaTela();
+                    filtrarProfessores(editPesquisarProfessor.getText().toString());
                 });
+    }
+
+    private void filtrarProfessores(String texto) {
+        listaFiltradaProfessores.clear();
+
+        String busca = texto.toLowerCase().trim();
+
+        if (busca.isEmpty()) {
+            listaFiltradaProfessores.addAll(listaProfessores);
+        } else {
+            for (Map<String, Object> professor : listaProfessores) {
+                String nome = String.valueOf(professor.get("nome")).toLowerCase();
+
+                if (nome.contains(busca)) {
+                    listaFiltradaProfessores.add(professor);
+                }
+            }
+        }
+
+        mostrarProfessoresNaTela();
     }
 
     private void mostrarProfessoresNaTela() {
         layoutProfessores.removeAllViews();
 
-        int total = listaProfessores.size();
+        int total = listaFiltradaProfessores.size();
         textTotalProfessores.setText(total == 1 ? "1 professor" : total + " professores");
 
-        if (listaProfessores.isEmpty()) {
+        if (listaFiltradaProfessores.isEmpty()) {
             TextView vazio = new TextView(this);
-            vazio.setText("Nenhum professor cadastrado na grade.");
+            vazio.setText("Nenhum professor encontrado.");
             vazio.setTextColor(Color.parseColor("#8F9BBC"));
             vazio.setGravity(Gravity.CENTER);
             vazio.setTextSize(14);
-            vazio.setPadding(30, 60, 30, 60);
+            vazio.setPadding(dp(30), dp(60), dp(30), dp(60));
+            vazio.setBackground(criarFundo("#0B1536", "#1E3A8A", 24));
             layoutProfessores.addView(vazio);
             return;
         }
 
-        for (Map<String, Object> professor : listaProfessores) {
+        for (Map<String, Object> professor : listaFiltradaProfessores) {
             String nome = String.valueOf(professor.get("nome"));
             boolean expandido = Boolean.TRUE.equals(professor.get("expandido"));
 
@@ -158,43 +200,47 @@ public class GerenciarProfessores extends AppCompatActivity {
             card.setLayoutParams(cardParams);
 
             RelativeLayout header = new RelativeLayout(this);
-            header.setLayoutParams(new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            ));
 
-            LinearLayout textos = new LinearLayout(this);
-            textos.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout areaNome = new LinearLayout(this);
+            areaNome.setOrientation(LinearLayout.HORIZONTAL);
+            areaNome.setGravity(Gravity.CENTER_VERTICAL);
 
-            RelativeLayout.LayoutParams textosParams = new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams areaNomeParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT
             );
-            textosParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            textosParams.addRule(RelativeLayout.LEFT_OF, ID_BOTAO_MENU);
-            textos.setLayoutParams(textosParams);
+            areaNomeParams.addRule(RelativeLayout.LEFT_OF, ID_BOTAO_MENU);
+            areaNome.setLayoutParams(areaNomeParams);
+
+            ImageView icProfessor = new ImageView(this);
+            icProfessor.setImageResource(R.drawable.ic_professor_custom);
+            icProfessor.setColorFilter(Color.parseColor("#16E0C4"));
+            icProfessor.setBackground(criarFundo("#111F4D", "#16E0C4", 50));
+            icProfessor.setPadding(dp(9), dp(9), dp(9), dp(9));
+
+            LinearLayout.LayoutParams icParams = new LinearLayout.LayoutParams(dp(46), dp(46));
+            icParams.setMargins(0, 0, dp(14), 0);
+            icProfessor.setLayoutParams(icParams);
 
             TextView txtNome = new TextView(this);
-            txtNome.setText("👨‍🏫 " + nome);
+            txtNome.setText(nome);
             txtNome.setTextColor(Color.WHITE);
             txtNome.setTextSize(18);
             txtNome.setTypeface(null, Typeface.BOLD);
-
-            TextView txtQuantidade = new TextView(this);
-            txtQuantidade.setText(vinculos.size() == 1 ? "1 vínculo ativo" : vinculos.size() + " vínculos ativos");
-            txtQuantidade.setTextColor(Color.parseColor("#16E0C4"));
-            txtQuantidade.setTextSize(12);
-            txtQuantidade.setTypeface(null, Typeface.BOLD);
-            txtQuantidade.setPadding(0, dp(6), 0, 0);
-
-            textos.addView(txtNome);
-            textos.addView(txtQuantidade);
+            txtNome.setSingleLine(false);
+            txtNome.setMaxLines(2);
+            txtNome.setLayoutParams(new LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1
+            ));
 
             ImageButton btnMenu = new ImageButton(this);
             btnMenu.setId(ID_BOTAO_MENU);
-            btnMenu.setImageResource(android.R.drawable.ic_menu_more);
-            btnMenu.setBackgroundColor(Color.TRANSPARENT);
-            btnMenu.setColorFilter(Color.parseColor("#16E0C4"));
+            btnMenu.setImageResource(R.drawable.ic_more_vertical_custom);
+            btnMenu.setBackground(criarFundo("#111F4D", "#2962FF", 50));
+            btnMenu.setColorFilter(Color.WHITE);
+            btnMenu.setPadding(dp(10), dp(10), dp(10), dp(10));
 
             RelativeLayout.LayoutParams menuParams = new RelativeLayout.LayoutParams(dp(42), dp(42));
             menuParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -205,18 +251,18 @@ public class GerenciarProfessores extends AppCompatActivity {
 
             btnMenu.setOnClickListener(v -> {
                 PopupMenu popup = new PopupMenu(GerenciarProfessores.this, btnMenu);
-                popup.getMenu().add("✏ Editar professor");
-                popup.getMenu().add("➕ Adicionar vínculo");
-                popup.getMenu().add("🗑 Excluir professor");
+                popup.getMenu().add("Editar professor");
+                popup.getMenu().add("Adicionar vínculo");
+                popup.getMenu().add("Excluir professor");
 
                 popup.setOnMenuItemClickListener(item -> {
                     String opcao = item.getTitle().toString();
 
-                    if (opcao.equals("✏ Editar professor")) {
+                    if (opcao.equals("Editar professor")) {
                         abrirDialogEditarProfessor(nome);
-                    } else if (opcao.equals("➕ Adicionar vínculo")) {
+                    } else if (opcao.equals("Adicionar vínculo")) {
                         abrirDialogAdicionarVinculo(nome);
-                    } else if (opcao.equals("🗑 Excluir professor")) {
+                    } else if (opcao.equals("Excluir professor")) {
                         confirmarExclusaoProfessor(nome);
                     }
 
@@ -226,7 +272,10 @@ public class GerenciarProfessores extends AppCompatActivity {
                 popup.show();
             });
 
-            header.addView(textos);
+            areaNome.addView(icProfessor);
+            areaNome.addView(txtNome);
+
+            header.addView(areaNome);
             header.addView(btnMenu);
             card.addView(header);
 
@@ -238,17 +287,17 @@ public class GerenciarProfessores extends AppCompatActivity {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         dp(1)
                 );
-                divisorParams.setMargins(0, dp(14), 0, dp(14));
+                divisorParams.setMargins(0, dp(16), 0, dp(16));
                 divisor.setLayoutParams(divisorParams);
 
                 card.addView(divisor);
 
                 TextView txtTitulo = new TextView(this);
-                txtTitulo.setText("Vínculos cadastrados:");
+                txtTitulo.setText("Vínculos cadastrados");
                 txtTitulo.setTextColor(Color.parseColor("#7B61FF"));
                 txtTitulo.setTextSize(14);
                 txtTitulo.setTypeface(null, Typeface.BOLD);
-                txtTitulo.setPadding(0, 0, 0, dp(10));
+                txtTitulo.setPadding(0, 0, 0, dp(12));
                 card.addView(txtTitulo);
 
                 for (Map<String, String> vinculo : finalVinculos) {
@@ -256,12 +305,16 @@ public class GerenciarProfessores extends AppCompatActivity {
                 }
             }
 
-            Button btnExpandir = new Button(this, null, android.R.attr.borderlessButtonStyle);
-            btnExpandir.setText(expandido ? "▲ OCULTAR VÍNCULOS" : "▼ VER VÍNCULOS");
-            btnExpandir.setTextColor(Color.parseColor("#7B61FF"));
+            MaterialButton btnExpandir = new MaterialButton(this);
+            btnExpandir.setText(expandido ? "Ocultar vínculos" : "Ver vínculos");
+            btnExpandir.setTextColor(Color.WHITE);
             btnExpandir.setTextSize(12);
             btnExpandir.setTypeface(null, Typeface.BOLD);
             btnExpandir.setAllCaps(false);
+            btnExpandir.setIconResource(expandido ? R.drawable.ic_expand_less_custom : R.drawable.ic_expand_more_custom);
+            btnExpandir.setIconTintResource(android.R.color.white);
+            btnExpandir.setIconPadding(dp(8));
+            btnExpandir.setBackgroundColor(Color.TRANSPARENT);
 
             btnExpandir.setOnClickListener(v -> {
                 professor.put("expandido", !expandido);
@@ -275,14 +328,14 @@ public class GerenciarProfessores extends AppCompatActivity {
 
     private View criarLinhaVinculo(Map<String, String> vinculo) {
         RelativeLayout linha = new RelativeLayout(this);
-        linha.setPadding(dp(12), dp(12), dp(12), dp(12));
+        linha.setPadding(dp(14), dp(14), dp(14), dp(14));
         linha.setBackground(criarFundo("#020A22", "#1E3A8A", 20));
 
         LinearLayout.LayoutParams linhaParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        linhaParams.setMargins(0, 0, 0, dp(10));
+        linhaParams.setMargins(0, 0, 0, dp(12));
         linha.setLayoutParams(linhaParams);
 
         LinearLayout textos = new LinearLayout(this);
@@ -296,46 +349,38 @@ public class GerenciarProfessores extends AppCompatActivity {
         textos.setLayoutParams(textosParams);
 
         TextView txtDisciplina = new TextView(this);
-        txtDisciplina.setText("📚 " + valorSeguro(vinculo.get("disciplina")));
+        txtDisciplina.setText(valorSeguro(vinculo.get("disciplina")));
         txtDisciplina.setTextColor(Color.WHITE);
-        txtDisciplina.setTextSize(14);
+        txtDisciplina.setTextSize(15);
         txtDisciplina.setTypeface(null, Typeface.BOLD);
 
-        TextView txtCurso = new TextView(this);
-        txtCurso.setText("Curso: " + valorSeguro(vinculo.get("curso")));
-        txtCurso.setTextColor(Color.parseColor("#AEB9D8"));
-        txtCurso.setTextSize(12);
-        txtCurso.setPadding(0, dp(4), 0, 0);
-
-        TextView txtTurno = new TextView(this);
-        txtTurno.setText("Turno: " + valorSeguro(vinculo.get("turno")));
-        txtTurno.setTextColor(Color.parseColor("#16E0C4"));
-        txtTurno.setTextSize(12);
-        txtTurno.setPadding(0, dp(4), 0, 0);
-
         textos.addView(txtDisciplina);
-        textos.addView(txtCurso);
-        textos.addView(txtTurno);
+        textos.addView(criarLinhaInfo("Curso", valorSeguro(vinculo.get("curso"))));
+        textos.addView(criarLinhaInfo("Turno", valorSeguro(vinculo.get("turno"))));
+        textos.addView(criarLinhaInfo("Dia", valorSeguro(vinculo.get("dia"))));
+        textos.addView(criarLinhaInfo("Horário", valorSeguro(vinculo.get("horario"))));
 
         ImageButton btnEditar = new ImageButton(this);
         btnEditar.setId(ID_BOTAO_EDITAR_VINCULO);
-        btnEditar.setImageResource(android.R.drawable.ic_menu_edit);
-        btnEditar.setBackgroundColor(Color.TRANSPARENT);
-        btnEditar.setColorFilter(Color.parseColor("#7B61FF"));
+        btnEditar.setImageResource(R.drawable.ic_edit_custom);
+        btnEditar.setBackground(criarFundo("#1B1644", "#7B61FF", 50));
+        btnEditar.setColorFilter(Color.WHITE);
+        btnEditar.setPadding(dp(9), dp(9), dp(9), dp(9));
 
-        RelativeLayout.LayoutParams editarParams = new RelativeLayout.LayoutParams(dp(38), dp(38));
+        RelativeLayout.LayoutParams editarParams = new RelativeLayout.LayoutParams(dp(40), dp(40));
         editarParams.addRule(RelativeLayout.LEFT_OF, ID_BOTAO_EXCLUIR_VINCULO);
         editarParams.addRule(RelativeLayout.CENTER_VERTICAL);
-        editarParams.setMargins(0, 0, dp(6), 0);
+        editarParams.setMargins(0, 0, dp(8), 0);
         btnEditar.setLayoutParams(editarParams);
 
         ImageButton btnExcluir = new ImageButton(this);
         btnExcluir.setId(ID_BOTAO_EXCLUIR_VINCULO);
-        btnExcluir.setImageResource(android.R.drawable.ic_menu_delete);
-        btnExcluir.setBackgroundColor(Color.TRANSPARENT);
-        btnExcluir.setColorFilter(Color.parseColor("#E84142"));
+        btnExcluir.setImageResource(R.drawable.ic_delete_custom);
+        btnExcluir.setBackgroundResource(R.drawable.bg_delete_button);
+        btnExcluir.setColorFilter(Color.parseColor("#FF5C5C"));
+        btnExcluir.setPadding(dp(9), dp(9), dp(9), dp(9));
 
-        RelativeLayout.LayoutParams excluirParams = new RelativeLayout.LayoutParams(dp(38), dp(38));
+        RelativeLayout.LayoutParams excluirParams = new RelativeLayout.LayoutParams(dp(40), dp(40));
         excluirParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         excluirParams.addRule(RelativeLayout.CENTER_VERTICAL);
         btnExcluir.setLayoutParams(excluirParams);
@@ -350,6 +395,16 @@ public class GerenciarProfessores extends AppCompatActivity {
         return linha;
     }
 
+    private TextView criarLinhaInfo(String titulo, String valor) {
+        TextView texto = new TextView(this);
+        texto.setText(titulo + ": " + valor);
+        texto.setTextColor(Color.parseColor("#16E0C4"));
+        texto.setTextSize(13);
+        texto.setPadding(0, dp(5), 0, 0);
+        texto.setSingleLine(false);
+        return texto;
+    }
+
     private void abrirDialogEditarProfessor(String nomeAtual) {
         LinearLayout layoutDialog = criarLayoutDialog();
 
@@ -357,7 +412,7 @@ public class GerenciarProfessores extends AppCompatActivity {
         layoutDialog.addView(editNome);
 
         new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
-                .setTitle("✏ Editar professor")
+                .setTitle("Editar professor")
                 .setView(layoutDialog)
                 .setPositiveButton("Salvar", (dialog, which) -> {
                     String novoNome = editNome.getText().toString().trim();
@@ -400,31 +455,39 @@ public class GerenciarProfessores extends AppCompatActivity {
         EditText editCurso = criarCampoDialog("Curso", "");
         EditText editDisciplina = criarCampoDialog("Disciplina", "");
         EditText editTurno = criarCampoDialog("Turno", "");
+        EditText editDia = criarCampoDialog("Dia", "");
+        EditText editHorario = criarCampoDialog("Horário", "");
 
         layoutDialog.addView(editCurso);
         layoutDialog.addView(editDisciplina);
         layoutDialog.addView(editTurno);
+        layoutDialog.addView(editDia);
+        layoutDialog.addView(editHorario);
 
         new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
-                .setTitle("➕ Adicionar vínculo")
+                .setTitle("Adicionar vínculo")
                 .setView(layoutDialog)
                 .setPositiveButton("Adicionar", (dialog, which) -> {
                     String curso = editCurso.getText().toString().trim();
                     String disciplina = editDisciplina.getText().toString().trim();
                     String turno = editTurno.getText().toString().trim();
+                    String dia = editDia.getText().toString().trim();
+                    String horario = editHorario.getText().toString().trim();
 
-                    if (curso.isEmpty() || disciplina.isEmpty() || turno.isEmpty()) {
+                    if (curso.isEmpty() || disciplina.isEmpty() || turno.isEmpty()
+                            || dia.isEmpty() || horario.isEmpty()) {
                         Toast.makeText(this, "Preencha todos os campos.", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    adicionarVinculo(nomeProfessor, curso, disciplina, turno);
+                    adicionarVinculo(nomeProfessor, curso, disciplina, turno, dia, horario);
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
 
-    private void adicionarVinculo(String nomeProfessor, String curso, String disciplina, String turno) {
+    private void adicionarVinculo(String nomeProfessor, String curso, String disciplina,
+                                  String turno, String dia, String horario) {
         DocumentReference ref = db.collection("grade").document();
 
         Map<String, Object> dados = new HashMap<>();
@@ -432,6 +495,8 @@ public class GerenciarProfessores extends AppCompatActivity {
         dados.put("Curso", curso);
         dados.put("Disciplina", disciplina);
         dados.put("Turno", turno);
+        dados.put("Dia", dia);
+        dados.put("Horario", horario);
 
         ref.set(dados)
                 .addOnSuccessListener(unused ->
@@ -448,37 +513,47 @@ public class GerenciarProfessores extends AppCompatActivity {
         EditText editCurso = criarCampoDialog("Curso", valorSeguro(vinculo.get("curso")));
         EditText editDisciplina = criarCampoDialog("Disciplina", valorSeguro(vinculo.get("disciplina")));
         EditText editTurno = criarCampoDialog("Turno", valorSeguro(vinculo.get("turno")));
+        EditText editDia = criarCampoDialog("Dia", valorSeguro(vinculo.get("dia")));
+        EditText editHorario = criarCampoDialog("Horário", valorSeguro(vinculo.get("horario")));
 
         layoutDialog.addView(editCurso);
         layoutDialog.addView(editDisciplina);
         layoutDialog.addView(editTurno);
+        layoutDialog.addView(editDia);
+        layoutDialog.addView(editHorario);
 
         new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
-                .setTitle("✏ Editar vínculo")
+                .setTitle("Editar vínculo")
                 .setView(layoutDialog)
                 .setPositiveButton("Salvar", (dialog, which) -> {
                     String curso = editCurso.getText().toString().trim();
                     String disciplina = editDisciplina.getText().toString().trim();
                     String turno = editTurno.getText().toString().trim();
+                    String dia = editDia.getText().toString().trim();
+                    String horario = editHorario.getText().toString().trim();
 
-                    if (curso.isEmpty() || disciplina.isEmpty() || turno.isEmpty()) {
+                    if (curso.isEmpty() || disciplina.isEmpty() || turno.isEmpty()
+                            || dia.isEmpty() || horario.isEmpty()) {
                         Toast.makeText(this, "Preencha todos os campos.", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    editarVinculo(vinculo.get("idDoc"), curso, disciplina, turno);
+                    editarVinculo(vinculo.get("idDoc"), curso, disciplina, turno, dia, horario);
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
 
-    private void editarVinculo(String idDocumento, String curso, String disciplina, String turno) {
+    private void editarVinculo(String idDocumento, String curso, String disciplina,
+                               String turno, String dia, String horario) {
         db.collection("grade")
                 .document(idDocumento)
                 .update(
                         "Curso", curso,
                         "Disciplina", disciplina,
-                        "Turno", turno
+                        "Turno", turno,
+                        "Dia", dia,
+                        "Horario", horario
                 )
                 .addOnSuccessListener(unused ->
                         Toast.makeText(this, "Vínculo atualizado!", Toast.LENGTH_SHORT).show()
@@ -490,7 +565,7 @@ public class GerenciarProfessores extends AppCompatActivity {
 
     private void confirmarExclusaoVinculo(Map<String, String> vinculo) {
         new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
-                .setTitle("🗑 Excluir vínculo")
+                .setTitle("Excluir vínculo")
                 .setMessage("Deseja excluir o vínculo de " + valorSeguro(vinculo.get("disciplina")) + "?")
                 .setPositiveButton("Excluir", (dialog, which) -> excluirVinculo(vinculo.get("idDoc")))
                 .setNegativeButton("Cancelar", null)
@@ -511,7 +586,7 @@ public class GerenciarProfessores extends AppCompatActivity {
 
     private void confirmarExclusaoProfessor(String nomeProfessor) {
         new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
-                .setTitle("🗑 Excluir professor")
+                .setTitle("Excluir professor")
                 .setMessage("Isso vai apagar " + nomeProfessor + " e todos os vínculos dele. Deseja continuar?")
                 .setPositiveButton("Excluir tudo", (dialog, which) -> excluirProfessorCompleto(nomeProfessor))
                 .setNegativeButton("Cancelar", null)
@@ -550,13 +625,7 @@ public class GerenciarProfessores extends AppCompatActivity {
     private EditText criarCampoDialog(String hint, String textoInicial) {
         EditText campo = new EditText(this);
         campo.setHint(hint);
-
-        if (textoInicial.equals("Não informado")) {
-            campo.setText("");
-        } else {
-            campo.setText(textoInicial);
-        }
-
+        campo.setText(textoInicial.equals("Não informado") ? "" : textoInicial);
         campo.setTextColor(Color.WHITE);
         campo.setHintTextColor(Color.parseColor("#8F9BBC"));
         campo.setSingleLine(true);

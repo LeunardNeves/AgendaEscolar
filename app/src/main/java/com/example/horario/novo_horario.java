@@ -133,15 +133,11 @@ public class novo_horario extends AppCompatActivity {
                 mostrarDialogo(txtProfessor, "Selecione o Professor(a)", professores));
 
         Button btnVoltar = findViewById(R.id.btnVoltar);
-        ImageView btnFechar = findViewById(R.id.btnFechar);
 
         if (btnVoltar != null) {
             btnVoltar.setOnClickListener(v -> finish());
         }
 
-        if (btnFechar != null) {
-            btnFechar.setOnClickListener(v -> finish());
-        }
 
         androidx.appcompat.widget.AppCompatButton btnSalvarHorario = findViewById(R.id.btnSalvarHorario);
 

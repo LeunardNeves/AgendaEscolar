@@ -18,15 +18,17 @@
 
             <ImageView
                 android:id="@+id/imgTopCal"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:src="@drawable/ic_calendar"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="@drawable/bg_icon_circle_blue"
+                android:padding="10dp"
+                android:src="@drawable/ic_calendar_custom"
                 app:tint="#7B61FF" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="14dp"
                 android:layout_toEndOf="@id/imgTopCal"
                 android:orientation="vertical">
 
@@ -35,16 +37,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Grade do aluno"
-                    android:textColor="#DFDFEB"
-                    android:textSize="18sp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="19sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txtInfoAluno"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
                     android:text="Carregando informações..."
-                    android:textColor="#DFDFEB"
+                    android:textColor="#AEB9D8"
                     android:textSize="14sp" />
             </LinearLayout>
         </RelativeLayout>
@@ -67,20 +70,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:text="Grade de Horário"
-                    android:textColor="#DFDFEB"
-                    android:textSize="20sp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="21sp"
                     android:textStyle="bold" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardSegunda"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="18dp">
+                    app:cardBackgroundColor="#081B55"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -89,10 +93,12 @@
 
                         <ImageView
                             android:id="@+id/i1"
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_calendar"
+                            android:background="@drawable/bg_icon_circle_blue"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_calendar_custom"
                             app:tint="#7B61FF" />
 
                         <TextView
@@ -102,15 +108,16 @@
                             android:layout_marginStart="18dp"
                             android:layout_toEndOf="@id/i1"
                             android:text="Segunda-feira"
-                            android:textColor="#3F3D89"
-                            android:textSize="16sp" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_chevron_right"
+                            android:src="@drawable/ic_chevron_right_custom"
                             app:tint="#7B61FF" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
@@ -118,13 +125,14 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardTerca"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="18dp">
+                    app:cardBackgroundColor="#081B55"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -133,11 +141,13 @@
 
                         <ImageView
                             android:id="@+id/i2"
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_calendar"
-                            app:tint="#7B61FF" />
+                            android:background="@drawable/bg_icon_circle_blue"
+                            android:padding="8dp"
+                            app:tint="#7B61FF"
+                            android:src="@drawable/ic_calendar_custom" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -146,15 +156,16 @@
                             android:layout_marginStart="18dp"
                             android:layout_toEndOf="@id/i2"
                             android:text="Terça-feira"
-                            android:textColor="#3F3D89"
-                            android:textSize="16sp" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_chevron_right"
+                            android:src="@drawable/ic_chevron_right_custom"
                             app:tint="#7B61FF" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
@@ -162,13 +173,14 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardQuarta"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="18dp">
+                    app:cardBackgroundColor="#081B55"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -177,10 +189,12 @@
 
                         <ImageView
                             android:id="@+id/i3"
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_calendar"
+                            android:background="@drawable/bg_icon_circle_blue"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_calendar_custom"
                             app:tint="#7B61FF" />
 
                         <TextView
@@ -190,15 +204,16 @@
                             android:layout_marginStart="18dp"
                             android:layout_toEndOf="@id/i3"
                             android:text="Quarta-feira"
-                            android:textColor="#3F3D89"
-                            android:textSize="16sp" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_chevron_right"
+                            android:src="@drawable/ic_chevron_right_custom"
                             app:tint="#7B61FF" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
@@ -206,13 +221,14 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardQuinta"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="18dp">
+                    app:cardBackgroundColor="#081B55"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -221,10 +237,12 @@
 
                         <ImageView
                             android:id="@+id/i4"
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_calendar"
+                            android:background="@drawable/bg_icon_circle_blue"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_calendar_custom"
                             app:tint="#7B61FF" />
 
                         <TextView
@@ -234,15 +252,16 @@
                             android:layout_marginStart="18dp"
                             android:layout_toEndOf="@id/i4"
                             android:text="Quinta-feira"
-                            android:textColor="#3F3D89"
-                            android:textSize="16sp" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_chevron_right"
+                            android:src="@drawable/ic_chevron_right_custom"
                             app:tint="#7B61FF" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
@@ -250,13 +269,14 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardSexta"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginBottom="30dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="18dp">
+                    app:cardBackgroundColor="#081B55"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -265,10 +285,12 @@
 
                         <ImageView
                             android:id="@+id/i5"
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_calendar"
+                            android:background="@drawable/bg_icon_circle_blue"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_calendar_custom"
                             app:tint="#7B61FF" />
 
                         <TextView
@@ -278,15 +300,16 @@
                             android:layout_marginStart="18dp"
                             android:layout_toEndOf="@id/i5"
                             android:text="Sexta-feira"
-                            android:textColor="#3F3D89"
-                            android:textSize="16sp" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_chevron_right"
+                            android:src="@drawable/ic_chevron_right_custom"
                             app:tint="#7B61FF" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
@@ -296,7 +319,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:text="Avisos"
-                    android:textColor="#DFDFEB"
+                    android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -318,16 +341,18 @@
 
                         <ImageView
                             android:id="@+id/warn"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
                             android:layout_centerVertical="true"
-                            android:src="@android:drawable/ic_dialog_info"
-                            app:tint="#16E0C4" />
+                            android:background="@drawable/bg_icon_circle_blue"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_info_custom"
+                            app:tint="#7B61FF" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginStart="14dp"
                             android:layout_toEndOf="@id/warn"
                             android:orientation="vertical">
 
@@ -336,7 +361,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Nenhum aviso no momento"
-                                android:textColor="#16E0C4"
+                                android:textColor="#7B61FF"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
@@ -358,7 +383,6 @@
                                 android:text="Hoje"
                                 android:textColor="#AEB9D8"
                                 android:textSize="12sp" />
-
                         </LinearLayout>
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>

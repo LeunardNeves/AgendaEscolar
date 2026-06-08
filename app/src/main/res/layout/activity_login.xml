@@ -1,95 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000B2E"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:padding="24dp">
+    android:background="#020A22"
+    android:fillViewport="true">
 
-    <!-- LOGO NO TOPO -->
-    <ImageView
-        android:layout_width="280dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/logo"
-        android:scaleType="fitCenter" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bem-vindo de volta!"
-        android:textColor="#d5e1f5"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginTop="20dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Faça login para acessar sua conta"
-        android:textColor="#1A56F0"
-        android:layout_marginBottom="35dp" />
-
-    <!-- CAMPO USUÁRIO -->
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        android:layout_marginBottom="16dp">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <ImageView
+            android:layout_width="260dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="32dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="ACESSO\nADMINISTRATIVO"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:lineSpacingExtra="2dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Entre com o e-mail e senha cadastrados no sistema."
+            android:textColor="#AEB9D8"
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/editUsuario"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:hint="Usuário ou e-mail"
-            android:paddingHorizontal="15dp"
-            android:drawableStart="@drawable/ic_perso"
-            android:drawablePadding="10dp"
-            android:inputType="text" />
-    </androidx.cardview.widget.CardView>
-
-    <!-- CAMPO SENHA -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        android:layout_marginBottom="10dp">
+            android:layout_height="58dp"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/bg_input_neon"
+            android:drawableStart="@drawable/ic_person"
+            android:drawableTint="#2962FF"
+            android:drawablePadding="12dp"
+            android:hint="E-mail Administrativo"
+            android:inputType="textEmailAddress"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8F9BBC"
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/editSenha"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:hint="Senha"
-            android:paddingHorizontal="15dp"
+            android:layout_height="58dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_input_neon"
             android:drawableStart="@drawable/ic_lock"
-            android:drawablePadding="10dp"
-            android:inputType="textPassword" />
-    </androidx.cardview.widget.CardView>
+            android:drawableTint="#2962FF"
+            android:drawablePadding="12dp"
+            android:hint="Senha"
+            android:inputType="textPassword"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8F9BBC"
+            android:textSize="15sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="Esqueci minha senha"
-        android:textColor="@color/electric_blue"
-        android:layout_marginBottom="30dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEntrar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="32dp"
+            android:text="ENTRAR"
+            android:drawableTint="#7B61FF"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="#7B61FF"
+            app:cornerRadius="28dp" />
 
-    <!-- BOTÃO ENTRAR -->
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnEntrar"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:background="@drawable/bg_item"
-        android:backgroundTint="@color/electric_blue"
-        android:text="ENTRAR"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:textSize="16sp" />
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>
