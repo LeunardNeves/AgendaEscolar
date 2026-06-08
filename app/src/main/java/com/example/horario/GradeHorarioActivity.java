@@ -9,16 +9,19 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -29,8 +32,7 @@ import java.util.Map;
 
 public class GradeHorarioActivity extends AppCompatActivity {
 
-    private Button btnVoltar;
-    private TextView btnMenu;
+    private MaterialButton btnVoltar, btnMenu;
     private EditText editPesquisar;
     private LinearLayout layoutDias, layoutHorarios;
     private FirebaseFirestore db;
@@ -94,19 +96,19 @@ public class GradeHorarioActivity extends AppCompatActivity {
             TextView btnDia = new TextView(this);
             btnDia.setText(dia);
             btnDia.setGravity(Gravity.CENTER);
-            btnDia.setTextSize(16);
+            btnDia.setTextSize(15);
             btnDia.setTypeface(null, Typeface.BOLD);
-            btnDia.setPadding(dp(22), dp(16), dp(22), dp(16));
+            btnDia.setPadding(dp(18), dp(14), dp(18), dp(14));
 
             if (dia.equals(diaSelecionado)) {
                 btnDia.setTextColor(Color.WHITE);
-                btnDia.setBackground(criarFundo("#21113D", "#B84DFF", 22));
+                btnDia.setBackground(criarFundo("#21113D", "#7B61FF", 24));
             } else {
                 btnDia.setTextColor(Color.parseColor("#D8D8E8"));
-                btnDia.setBackground(criarFundo("#07163D", "#13254F", 22));
+                btnDia.setBackground(criarFundo("#07163D", "#1E3A8A", 24));
             }
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(92), dp(72));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(86), dp(60));
             params.setMargins(0, 0, dp(12), 0);
             btnDia.setLayoutParams(params);
 
@@ -151,7 +153,7 @@ public class GradeHorarioActivity extends AppCompatActivity {
                         Map<String, String> item = new HashMap<>();
                         item.put("id", doc.getId());
                         item.put("Dia", dia);
-                        item.put("Horario", pegarCampo(doc, "Horario"));
+                        item.put("Horario", pegarCampo(doc, "Horario", "horario"));
                         item.put("Disciplina", disciplina);
                         item.put("Professor", professor);
                         item.put("Sala", pegarCampo(doc, "Sala", "sala"));
@@ -159,7 +161,7 @@ public class GradeHorarioActivity extends AppCompatActivity {
                         lista.add(item);
                     }
 
-                    Collections.sort(lista, (a, b) -> a.get("Horario").compareTo(b.get("Horario")));
+                    Collections.sort(lista, (a, b) -> valorSeguro(a.get("Horario")).compareTo(valorSeguro(b.get("Horario"))));
 
                     if (lista.isEmpty()) {
                         TextView vazio = new TextView(this);
@@ -170,10 +172,11 @@ public class GradeHorarioActivity extends AppCompatActivity {
                             vazio.setText("Nenhum resultado encontrado.");
                         }
 
-                        vazio.setTextColor(Color.WHITE);
-                        vazio.setTextSize(15);
+                        vazio.setTextColor(Color.parseColor("#8F9BBC"));
+                        vazio.setTextSize(14);
                         vazio.setGravity(Gravity.CENTER);
-                        vazio.setPadding(0, dp(30), 0, dp(30));
+                        vazio.setPadding(dp(20), dp(40), dp(20), dp(40));
+                        vazio.setBackground(criarFundo("#07163D", "#1E3A8A", 20));
                         layoutHorarios.addView(vazio);
                         return;
                     }
@@ -189,67 +192,100 @@ public class GradeHorarioActivity extends AppCompatActivity {
 
     private void criarCardHorario(Map<String, String> item) {
         LinearLayout card = new LinearLayout(this);
-        card.setOrientation(LinearLayout.HORIZONTAL);
-        card.setGravity(Gravity.CENTER_VERTICAL);
-        card.setPadding(dp(12), dp(14), dp(8), dp(14));
-        card.setBackground(criarFundo("#07163D", "#13254F", 18));
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(dp(16), dp(16), dp(16), dp(14));
+        card.setBackground(criarFundo("#07163D", "#1E3A8A", 22));
 
         LinearLayout.LayoutParams paramsCard = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        paramsCard.setMargins(0, 0, 0, dp(12));
+        paramsCard.setMargins(0, 0, 0, dp(14));
         card.setLayoutParams(paramsCard);
 
-        TextView txtHora = new TextView(this);
-        txtHora.setText(item.get("Horario"));
-        txtHora.setTextColor(Color.parseColor("#16E0C4"));
-        txtHora.setTextSize(14);
-        txtHora.setTypeface(null, Typeface.BOLD);
-        txtHora.setGravity(Gravity.CENTER);
-        txtHora.setLayoutParams(new LinearLayout.LayoutParams(dp(95), LinearLayout.LayoutParams.WRAP_CONTENT));
+        RelativeLayout topo = new RelativeLayout(this);
 
-        LinearLayout info = new LinearLayout(this);
-        info.setOrientation(LinearLayout.VERTICAL);
-        info.setPadding(dp(12), 0, dp(8), 0);
-        info.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        LinearLayout areaInfo = new LinearLayout(this);
+        areaInfo.setOrientation(LinearLayout.HORIZONTAL);
+        areaInfo.setGravity(Gravity.CENTER_VERTICAL);
+
+        RelativeLayout.LayoutParams areaParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        areaParams.addRule(RelativeLayout.LEFT_OF, 2001);
+        areaInfo.setLayoutParams(areaParams);
+
+        ImageView icHorario = new ImageView(this);
+        icHorario.setImageResource(R.drawable.ic_clock_custom);
+        icHorario.setColorFilter(Color.parseColor("#16E0C4"));
+        icHorario.setBackground(criarFundo("#111F4D", "#16E0C4", 50));
+        icHorario.setPadding(dp(8), dp(8), dp(8), dp(8));
+
+        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(dp(44), dp(44));
+        iconParams.setMargins(0, 0, dp(14), 0);
+        icHorario.setLayoutParams(iconParams);
+
+        LinearLayout textos = new LinearLayout(this);
+        textos.setOrientation(LinearLayout.VERTICAL);
+        textos.setLayoutParams(new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
+        ));
 
         TextView txtDisciplina = new TextView(this);
-        txtDisciplina.setText(item.get("Disciplina"));
+        txtDisciplina.setText(valorSeguro(item.get("Disciplina")));
         txtDisciplina.setTextColor(Color.WHITE);
-        txtDisciplina.setTextSize(15);
+        txtDisciplina.setTextSize(16);
         txtDisciplina.setTypeface(null, Typeface.BOLD);
+        txtDisciplina.setSingleLine(false);
+        txtDisciplina.setMaxLines(2);
 
-        TextView txtProfessor = new TextView(this);
-        txtProfessor.setText(item.get("Professor"));
-        txtProfessor.setTextColor(Color.parseColor("#D8D8E8"));
-        txtProfessor.setTextSize(13);
+        TextView txtHorario = new TextView(this);
+        txtHorario.setText(valorSeguro(item.get("Horario")));
+        txtHorario.setTextColor(Color.parseColor("#16E0C4"));
+        txtHorario.setTextSize(14);
+        txtHorario.setTypeface(null, Typeface.BOLD);
+        txtHorario.setPadding(0, dp(4), 0, 0);
 
-        TextView txtSala = new TextView(this);
-        txtSala.setText(item.get("Sala"));
-        txtSala.setTextColor(Color.parseColor("#9FA8DA"));
-        txtSala.setTextSize(12);
+        textos.addView(txtDisciplina);
+        textos.addView(txtHorario);
 
-        info.addView(txtDisciplina);
-        info.addView(txtProfessor);
-        info.addView(txtSala);
+        ImageButton btnOpcoes = new ImageButton(this);
+        btnOpcoes.setId(2001);
+        btnOpcoes.setImageResource(R.drawable.ic_more_vertical_custom);
+        btnOpcoes.setBackground(criarFundo("#111F4D", "#2962FF", 50));
+        btnOpcoes.setColorFilter(Color.WHITE);
+        btnOpcoes.setPadding(dp(10), dp(10), dp(10), dp(10));
 
-        TextView btnOpcoes = new TextView(this);
-        btnOpcoes.setText("⋮");
-        btnOpcoes.setTextColor(Color.WHITE);
-        btnOpcoes.setTextSize(28);
-        btnOpcoes.setGravity(Gravity.CENTER);
+        RelativeLayout.LayoutParams menuParams = new RelativeLayout.LayoutParams(dp(42), dp(42));
+        menuParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        menuParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        btnOpcoes.setLayoutParams(menuParams);
 
         btnOpcoes.setOnClickListener(v -> mostrarMenuCard(btnOpcoes, item));
 
-        card.addView(txtHora);
-        card.addView(info);
-        card.addView(btnOpcoes);
+        areaInfo.addView(icHorario);
+        areaInfo.addView(textos);
+
+        topo.addView(areaInfo);
+        topo.addView(btnOpcoes);
+
+        card.addView(topo);
+
+        TextView txtProfessor = criarLinhaInfo("Professor", valorSeguro(item.get("Professor")));
+        TextView txtSala = criarLinhaInfo("Sala", valorSeguro(item.get("Sala")));
+        TextView txtDia = criarLinhaInfo("Dia", valorSeguro(item.get("Dia")));
+
+        card.addView(txtProfessor);
+        card.addView(txtSala);
+        card.addView(txtDia);
 
         layoutHorarios.addView(card);
     }
 
-    private void mostrarMenuCard(TextView btn, Map<String, String> item) {
+    private void mostrarMenuCard(ImageButton btn, Map<String, String> item) {
         PopupMenu menu = new PopupMenu(this, btn);
         menu.getMenu().add("Editar");
         menu.getMenu().add("Excluir");
@@ -273,6 +309,7 @@ public class GradeHorarioActivity extends AppCompatActivity {
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(dp(20), dp(10), dp(20), dp(10));
+        layout.setBackgroundColor(Color.parseColor("#0B1536"));
 
         EditText editDia = criarEditText("Dia", item.get("Dia"));
         EditText editHorario = criarEditText("Horário", item.get("Horario"));
@@ -286,16 +323,16 @@ public class GradeHorarioActivity extends AppCompatActivity {
         layout.addView(editProfessor);
         layout.addView(editSala);
 
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
                 .setTitle("Editar horário")
                 .setView(layout)
                 .setPositiveButton("Salvar", (dialog, which) -> {
                     Map<String, Object> dados = new HashMap<>();
-                    dados.put("Dia", editDia.getText().toString());
-                    dados.put("Horario", editHorario.getText().toString());
-                    dados.put("Disciplina", editDisciplina.getText().toString());
-                    dados.put("Professor", editProfessor.getText().toString());
-                    dados.put("Sala", editSala.getText().toString());
+                    dados.put("Dia", editDia.getText().toString().trim());
+                    dados.put("Horario", editHorario.getText().toString().trim());
+                    dados.put("Disciplina", editDisciplina.getText().toString().trim());
+                    dados.put("Professor", editProfessor.getText().toString().trim());
+                    dados.put("Sala", editSala.getText().toString().trim());
 
                     db.collection("grade").document(item.get("id"))
                             .update(dados)
@@ -312,7 +349,7 @@ public class GradeHorarioActivity extends AppCompatActivity {
     }
 
     private void confirmarExclusao(String id) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
                 .setTitle("Excluir horário")
                 .setMessage("Tem certeza que deseja excluir esse horário?")
                 .setPositiveButton("Excluir", (dialog, which) -> {
@@ -333,10 +370,33 @@ public class GradeHorarioActivity extends AppCompatActivity {
     private EditText criarEditText(String hint, String texto) {
         EditText editText = new EditText(this);
         editText.setHint(hint);
-        editText.setText(texto);
-        editText.setTextColor(Color.BLACK);
-        editText.setHintTextColor(Color.GRAY);
+        editText.setText(texto == null ? "" : texto);
+        editText.setTextColor(Color.WHITE);
+        editText.setHintTextColor(Color.parseColor("#8F9BBC"));
+        editText.setSingleLine(true);
+        editText.setBackgroundColor(Color.parseColor("#020A22"));
+        editText.setPadding(dp(14), dp(10), dp(14), dp(10));
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dp(52)
+        );
+        params.setMargins(0, 0, 0, dp(12));
+        editText.setLayoutParams(params);
+
         return editText;
+    }
+
+    private TextView criarLinhaInfo(String titulo, String valor) {
+        TextView texto = new TextView(this);
+
+        texto.setText(titulo + ": " + valor);
+        texto.setTextColor(Color.parseColor("#AEB9D8"));
+        texto.setTextSize(13);
+        texto.setPadding(dp(58), dp(6), 0, 0);
+        texto.setSingleLine(false);
+
+        return texto;
     }
 
     private String pegarCampo(QueryDocumentSnapshot doc, String... nomes) {
@@ -361,6 +421,13 @@ public class GradeHorarioActivity extends AppCompatActivity {
         if (diaSelecionado.equals("SEX")) return d.contains("SEX") || d.contains("SEXTA");
 
         return false;
+    }
+
+    private String valorSeguro(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            return "Não informado";
+        }
+        return texto;
     }
 
     private GradientDrawable criarFundo(String corFundo, String corBorda, int raio) {

@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class GerenciarProfessores extends AppCompatActivity {
 
-    private MaterialButton btnVoltar, btnFechar;
+    private MaterialButton btnVoltar;
     private EditText editPesquisarProfessor;
     private LinearLayout layoutProfessores;
     private TextView textTotalProfessores;
@@ -55,13 +55,11 @@ public class GerenciarProfessores extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         btnVoltar = findViewById(R.id.btnVoltar);
-        btnFechar = findViewById(R.id.btnFechar);
         editPesquisarProfessor = findViewById(R.id.editPesquisarProfessor);
         layoutProfessores = findViewById(R.id.layoutProfessores);
         textTotalProfessores = findViewById(R.id.textTotalProfessores);
 
         btnVoltar.setOnClickListener(v -> finish());
-        btnFechar.setOnClickListener(v -> finish());
 
         editPesquisarProfessor.addTextChangedListener(new TextWatcher() {
             @Override

@@ -2,22 +2,29 @@ package com.example.horario;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText editUsuario, editSenha;
-    private Button btnEntrar;
+    private EditText editUsuario;
+    private EditText editSenha;
+    private AppCompatButton btnEntrar;
+
     private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_NO);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -27,20 +34,26 @@ public class LoginActivity extends AppCompatActivity {
         editSenha = findViewById(R.id.editSenha);
         btnEntrar = findViewById(R.id.btnEntrar);
 
-        btnEntrar.setOnClickListener(v -> validarLoginFirebase());
+        btnEntrar.setOnClickListener(v -> validarLogin());
     }
 
-    private void validarLoginFirebase() {
-        String usuarioDigitado = editUsuario.getText().toString().trim();
-        String senhaDigitada = editSenha.getText().toString().trim();
+    private void validarLogin() {
 
-        if (usuarioDigitado.isEmpty()) {
-            editUsuario.setError("Digite o usuário/e-mail");
+        String emailDigitado =
+                editUsuario.getText().toString().trim();
+
+        String senhaDigitada =
+                editSenha.getText().toString().trim();
+
+        if (emailDigitado.isEmpty()) {
+            editUsuario.setError("Digite o e-mail");
+            editUsuario.requestFocus();
             return;
         }
 
         if (senhaDigitada.isEmpty()) {
             editSenha.setError("Digite a senha");
+            editSenha.requestFocus();
             return;
         }
 
@@ -51,33 +64,76 @@ public class LoginActivity extends AppCompatActivity {
                 .document("acesso")
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
+
                     btnEntrar.setEnabled(true);
                     btnEntrar.setText("ENTRAR");
 
                     if (!documentSnapshot.exists()) {
-                        Toast.makeText(this, "Login não configurado no Firebase.", Toast.LENGTH_LONG).show();
+
+                        Toast.makeText(
+                                LoginActivity.this,
+                                "Documento de acesso não encontrado.",
+                                Toast.LENGTH_LONG
+                        ).show();
+
                         return;
                     }
 
-                    String usuarioFirebase = documentSnapshot.getString("email");
-                    String senhaFirebase = documentSnapshot.getString("senha");
+                    String emailBanco =
+                            documentSnapshot.getString("email");
 
-                    if (usuarioDigitado.equals(usuarioFirebase) && senhaDigitada.equals(senhaFirebase)) {
-                        Toast.makeText(this, "Bem-vindo!", Toast.LENGTH_SHORT).show();
+                    String senhaBanco =
+                            documentSnapshot.getString("senha");
 
-                        Intent intent = new Intent(LoginActivity.this, SecretariaActivity.class);
+                    if (emailBanco == null || senhaBanco == null) {
+
+                        Toast.makeText(
+                                LoginActivity.this,
+                                "Campos email ou senha não encontrados.",
+                                Toast.LENGTH_LONG
+                        ).show();
+
+                        return;
+                    }
+
+                    if (emailDigitado.equalsIgnoreCase(emailBanco.trim())
+                            && senhaDigitada.equals(senhaBanco.trim())) {
+
+                        Toast.makeText(
+                                LoginActivity.this,
+                                "Login realizado com sucesso!",
+                                Toast.LENGTH_SHORT
+                        ).show();
+
+                        Intent intent =
+                                new Intent(
+                                        LoginActivity.this,
+                                        SecretariaActivity.class
+                                );
+
                         startActivity(intent);
                         finish();
 
                     } else {
-                        Toast.makeText(this, "Usuário ou senha inválidos!", Toast.LENGTH_SHORT).show();
+
+                        Toast.makeText(
+                                LoginActivity.this,
+                                "E-mail ou senha incorretos.",
+                                Toast.LENGTH_SHORT
+                        ).show();
                     }
+
                 })
                 .addOnFailureListener(e -> {
+
                     btnEntrar.setEnabled(true);
                     btnEntrar.setText("ENTRAR");
 
-                    Toast.makeText(this, "Erro ao acessar Firebase: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(
+                            LoginActivity.this,
+                            "Erro ao acessar o Firestore:\n" + e.getMessage(),
+                            Toast.LENGTH_LONG
+                    ).show();
                 });
     }
 }

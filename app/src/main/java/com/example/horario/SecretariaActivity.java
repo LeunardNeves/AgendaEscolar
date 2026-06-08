@@ -14,11 +14,15 @@ public class SecretariaActivity extends AppCompatActivity {
     private CardView cardHorarios;
     private CardView cardProfessores;
     private CardView cardGerenciarProfessores;
+    private CardView cardAlterarSenha;
+
     private Button btnSair;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+        AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_NO);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_secretaria);
@@ -27,28 +31,42 @@ public class SecretariaActivity extends AppCompatActivity {
         cardHorarios = findViewById(R.id.cardHorarios);
         cardProfessores = findViewById(R.id.cardProfessores);
         cardGerenciarProfessores = findViewById(R.id.cardGerenciarProfessores);
+        cardAlterarSenha = findViewById(R.id.cardAlterarSenha);
+
         btnSair = findViewById(R.id.btnSair);
 
         cardAvisos.setOnClickListener(v -> {
-            Intent intent = new Intent(SecretariaActivity.this, GestaoAvisosActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(
+                    SecretariaActivity.this,
+                    GestaoAvisosActivity.class));
         });
 
         cardProfessores.setOnClickListener(v -> {
-            Intent intent = new Intent(SecretariaActivity.this, CadastroProfessorActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(
+                    SecretariaActivity.this,
+                    CadastroProfessorActivity.class));
         });
 
         cardGerenciarProfessores.setOnClickListener(v -> {
-            Intent intent = new Intent(SecretariaActivity.this, GerenciarProfessores.class);
-            startActivity(intent);
+            startActivity(new Intent(
+                    SecretariaActivity.this,
+                    GerenciarProfessores.class));
         });
 
         cardHorarios.setOnClickListener(v -> {
-            Intent intent = new Intent(SecretariaActivity.this, GradeHorarioActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(
+                    SecretariaActivity.this,
+                    GradeHorarioActivity.class));
         });
 
-        btnSair.setOnClickListener(v -> finish());
+        cardAlterarSenha.setOnClickListener(v -> {
+            startActivity(new Intent(
+                    SecretariaActivity.this,
+                    AlterarSenhaActivity.class));
+        });
+
+        btnSair.setOnClickListener(v -> {
+            finish();
+        });
     }
 }
