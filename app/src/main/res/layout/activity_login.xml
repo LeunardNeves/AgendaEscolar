@@ -21,13 +21,15 @@
             android:src="@drawable/logo" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Acesso Administrativo"
+            android:gravity="center"
+            android:text="ACESSO\nADMINISTRATIVO"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:lineSpacingExtra="2dp" />
 
         <TextView
             android:layout_width="match_parent"

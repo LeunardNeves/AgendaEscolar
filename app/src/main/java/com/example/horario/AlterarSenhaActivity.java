@@ -17,7 +17,7 @@ public class AlterarSenhaActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private static final String COLECAO_LOGIN = "loginSecretaria";
-    private static final String DOCUMENTO_ACESSO = "acesso";
+    private static final String DOCUMENTO_LOGIN = "acesso";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,92 +67,54 @@ public class AlterarSenhaActivity extends AppCompatActivity {
             return;
         }
 
-        if (senhaAtual.equals(novaSenha)) {
-            editNovaSenha.setError("A nova senha precisa ser diferente da senha atual");
-            editNovaSenha.requestFocus();
-            return;
-        }
-
         btnSalvarSenha.setEnabled(false);
         btnSalvarSenha.setText("Salvando...");
 
         db.collection(COLECAO_LOGIN)
-                .document(DOCUMENTO_ACESSO)
+                .document(DOCUMENTO_LOGIN)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (!documentSnapshot.exists()) {
                         restaurarBotao();
-                        Toast.makeText(
-                                AlterarSenhaActivity.this,
-                                "Documento de acesso não encontrado.",
-                                Toast.LENGTH_LONG
-                        ).show();
+                        Toast.makeText(this, "Documento de login não encontrado.", Toast.LENGTH_LONG).show();
                         return;
                     }
 
                     String senhaBanco = documentSnapshot.getString("senha");
 
-                    if (senhaBanco == null || senhaBanco.trim().isEmpty()) {
+                    if (senhaBanco == null) {
                         restaurarBotao();
-                        Toast.makeText(
-                                AlterarSenhaActivity.this,
-                                "Campo senha não encontrado no banco.",
-                                Toast.LENGTH_LONG
-                        ).show();
+                        Toast.makeText(this, "Campo senha não encontrado no Firebase.", Toast.LENGTH_LONG).show();
                         return;
                     }
 
                     if (!senhaAtual.equals(senhaBanco.trim())) {
                         restaurarBotao();
-                        Toast.makeText(
-                                AlterarSenhaActivity.this,
-                                "Senha atual incorreta.",
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        Toast.makeText(this, "Senha atual incorreta.", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     db.collection(COLECAO_LOGIN)
-                            .document(DOCUMENTO_ACESSO)
+                            .document(DOCUMENTO_LOGIN)
                             .update("senha", novaSenha)
                             .addOnSuccessListener(unused -> {
                                 restaurarBotao();
-                                Toast.makeText(
-                                        AlterarSenhaActivity.this,
-                                        "Senha alterada com sucesso!",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-
-                                limparCampos();
+                                Toast.makeText(this, "Senha alterada no Firebase com sucesso!", Toast.LENGTH_SHORT).show();
                                 finish();
                             })
                             .addOnFailureListener(e -> {
                                 restaurarBotao();
-                                Toast.makeText(
-                                        AlterarSenhaActivity.this,
-                                        "Erro ao alterar senha: " + e.getMessage(),
-                                        Toast.LENGTH_LONG
-                                ).show();
+                                Toast.makeText(this, "Erro ao atualizar senha: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             });
                 })
                 .addOnFailureListener(e -> {
                     restaurarBotao();
-                    Toast.makeText(
-                            AlterarSenhaActivity.this,
-                            "Erro ao buscar senha: " + e.getMessage(),
-                            Toast.LENGTH_LONG
-                    ).show();
+                    Toast.makeText(this, "Erro ao buscar senha: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 
     private void restaurarBotao() {
         btnSalvarSenha.setEnabled(true);
         btnSalvarSenha.setText("SALVAR NOVA SENHA");
-    }
-
-    private void limparCampos() {
-        editSenhaAtual.setText("");
-        editNovaSenha.setText("");
-        editConfirmarSenha.setText("");
     }
 }

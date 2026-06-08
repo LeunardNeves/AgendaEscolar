@@ -1,6 +1,7 @@
 package com.example.horario;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -27,6 +28,11 @@ import java.util.ArrayList;
 
 public class AlunoActivity extends AppCompatActivity {
 
+    private static final String PREF_ALUNO = "dados_aluno";
+    private static final String KEY_CURSO = "curso";
+    private static final String KEY_ANO = "ano";
+    private static final String KEY_TURNO = "turno";
+
     private String curso, ano, turno, cursoCompleto;
 
     private TextView txtInfoAluno, txtTituloAviso, txtDescricaoAviso, txtDataAviso;
@@ -40,23 +46,51 @@ public class AlunoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aluno);
 
-        receberDados();
+        receberOuCarregarDadosSalvos();
         inicializarComponentes();
         configurarTela();
         configurarCliques();
         carregarAviso();
     }
 
-    private void receberDados() {
+    private void receberOuCarregarDadosSalvos() {
         curso = getIntent().getStringExtra("curso");
         ano = getIntent().getStringExtra("ano");
         turno = getIntent().getStringExtra("turno");
+
+        if (curso != null && ano != null && turno != null
+                && !curso.trim().isEmpty()
+                && !ano.trim().isEmpty()
+                && !turno.trim().isEmpty()) {
+
+            curso = curso.trim();
+            ano = ano.trim();
+            turno = turno.trim();
+
+            salvarFiltroAluno(curso, ano, turno);
+
+        } else {
+            SharedPreferences preferences = getSharedPreferences(PREF_ALUNO, MODE_PRIVATE);
+
+            curso = preferences.getString(KEY_CURSO, "");
+            ano = preferences.getString(KEY_ANO, "");
+            turno = preferences.getString(KEY_TURNO, "");
+        }
 
         if (curso == null) curso = "";
         if (ano == null) ano = "";
         if (turno == null) turno = "";
 
         cursoCompleto = curso + " " + ano;
+    }
+
+    private void salvarFiltroAluno(String curso, String ano, String turno) {
+        getSharedPreferences(PREF_ALUNO, MODE_PRIVATE)
+                .edit()
+                .putString(KEY_CURSO, curso)
+                .putString(KEY_ANO, ano)
+                .putString(KEY_TURNO, turno)
+                .apply();
     }
 
     private void inicializarComponentes() {
@@ -148,11 +182,11 @@ public class AlunoActivity extends AppCompatActivity {
             warn.setColorFilter(Color.parseColor("#FF5C5C"));
         } else {
             cardAviso.setCardBackgroundColor(Color.parseColor("#081B55"));
-            txtTituloAviso.setTextColor(Color.parseColor("#16E0C4"));
+            txtTituloAviso.setTextColor(Color.parseColor("#7B61FF"));
             txtDescricaoAviso.setTextColor(Color.WHITE);
             txtDataAviso.setTextColor(Color.parseColor("#AEB9D8"));
             warn.setImageResource(R.drawable.ic_info_custom);
-            warn.setColorFilter(Color.parseColor("#16E0C4"));
+            warn.setColorFilter(Color.parseColor("#7B61FF"));
         }
     }
 
@@ -273,7 +307,7 @@ public class AlunoActivity extends AppCompatActivity {
 
             TextView tipo = new TextView(this);
             tipo.setText(aviso.urgente ? "URGENTE" : "NORMAL");
-            tipo.setTextColor(aviso.urgente ? Color.parseColor("#FF6B6B") : Color.parseColor("#16E0C4"));
+            tipo.setTextColor(aviso.urgente ? Color.parseColor("#FF6B6B") : Color.parseColor("#7B61FF"));
             tipo.setTextSize(12);
             tipo.setTypeface(null, Typeface.BOLD);
 
@@ -382,13 +416,13 @@ public class AlunoActivity extends AppCompatActivity {
 
             ImageView icRelogio = new ImageView(this);
             icRelogio.setImageResource(R.drawable.ic_clock_custom);
-            icRelogio.setColorFilter(Color.parseColor("#16E0C4"));
+            icRelogio.setColorFilter(Color.parseColor("#7B61FF"));
 
             linhaHorario.addView(icRelogio, new LinearLayout.LayoutParams(dp(20), dp(20)));
 
             TextView txtHorario = new TextView(this);
             txtHorario.setText(aula.horario);
-            txtHorario.setTextColor(Color.parseColor("#16E0C4"));
+            txtHorario.setTextColor(Color.parseColor("#7B61FF"));
             txtHorario.setTextSize(17);
             txtHorario.setTypeface(null, Typeface.BOLD);
             txtHorario.setPadding(dp(8), 0, 0, 0);
@@ -464,7 +498,6 @@ public class AlunoActivity extends AppCompatActivity {
         String horario;
         String disciplina;
         String professor;
-
         AulaHorario(String horario, String disciplina, String professor) {
             this.horario = horario;
             this.disciplina = disciplina;
