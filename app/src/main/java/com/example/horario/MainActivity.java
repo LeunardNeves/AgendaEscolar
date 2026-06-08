@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Selecione o curso primeiro.", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             mostrarDialogoAno();
         });
 
@@ -175,10 +173,7 @@ public class MainActivity extends AppCompatActivity {
             txtTurno.setText("Selecione o Turno");
             txtTurno.setTextColor(0xFF8A93B8);
 
-            filtrarTurnosPorCursoEAno(
-                    txtCurso.getText().toString(),
-                    anoSelecionado
-            );
+            filtrarTurnosPorCursoEAno(txtCurso.getText().toString(), anoSelecionado);
         });
 
         builder.show();
@@ -285,7 +280,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(MainActivity.this, AlunoActivity.class);
-
         intent.putExtra("curso", cursoSelecionado);
         intent.putExtra("ano", anoSelecionado);
         intent.putExtra("turno", turnoSelecionado);

@@ -6,11 +6,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class novo_horario extends AppCompatActivity {
+
+    private FirebaseFirestore db;
+
+    private TextView txtDiaSemana;
+    private TextView txtInicio;
+    private TextView txtTermino;
+    private TextView txtCurso;
+    private TextView txtDisciplina;
+    private TextView txtProfessor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,69 +33,220 @@ public class novo_horario extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_novo_horario);
 
-        // 1. Vincular os blocos clicáveis (LinearLayouts)
+        db = FirebaseFirestore.getInstance();
+
         LinearLayout layoutDiaSemana = findViewById(R.id.layoutDiaSemana);
         LinearLayout layoutInicio = findViewById(R.id.layoutInicio);
         LinearLayout layoutTermino = findViewById(R.id.layoutTermino);
+        LinearLayout layoutCurso = findViewById(R.id.layoutCurso);
         LinearLayout layoutDisciplina = findViewById(R.id.layoutDisciplina);
         LinearLayout layoutProfessor = findViewById(R.id.layoutProfessor);
-        LinearLayout layoutSala = findViewById(R.id.layoutSala);
 
-        // 2. Vincular os TextViews que vão mudar de texto
-        TextView txtDiaSemana = findViewById(R.id.txtDiaSemana);
-        TextView txtInicio = findViewById(R.id.txtInicio);
-        TextView txtTermino = findViewById(R.id.txtTermino);
-        TextView txtDisciplina = findViewById(R.id.txtDisciplina);
-        TextView txtProfessor = findViewById(R.id.txtProfessor);
-        TextView txtSala = findViewById(R.id.txtSala);
+        txtDiaSemana = findViewById(R.id.txtDiaSemana);
+        txtInicio = findViewById(R.id.txtInicio);
+        txtTermino = findViewById(R.id.txtTermino);
+        txtCurso = findViewById(R.id.txtCurso);
+        txtDisciplina = findViewById(R.id.txtDisciplina);
+        txtProfessor = findViewById(R.id.txtProfessor);
 
-        // 3. Definir as listas de dados
-        String[] dias = {"Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira"};
-        String[] horariosInicio = {"07:30", "08:20", "09:30", "10:20", "13:30", "14:20"};
-        String[] horariosTermino = {"08:20", "09:10", "10:20", "11:10", "14:20", "15:10"};
-        String[] disciplinas = {"Lógica de Programação", "Redes de Computadores", "Banco de Dados", "Desenvolvimento Web"};
-        String[] professores = {"Prof. Alan Turing", "Profª. Ada Lovelace", "Prof. Grace Hopper"};
-        String[] salas = {"Laboratório 01", "Laboratório 02", "Sala 05", "Auditório"};
+        String[] dias = {
+                "Segunda",
+                "Terça",
+                "Quarta",
+                "Quinta",
+                "Sexta"
+        };
 
-        // 4. Configurar os cliques para abrir as listas de escolha
-        layoutDiaSemana.setOnClickListener(v -> mostrarDialogo(txtDiaSemana, "Selecione o Dia", dias));
-        layoutInicio.setOnClickListener(v -> mostrarDialogo(txtInicio, "Horário de Início", horariosInicio));
-        layoutTermino.setOnClickListener(v -> mostrarDialogo(txtTermino, "Horário de Término", horariosTermino));
-        layoutDisciplina.setOnClickListener(v -> mostrarDialogo(txtDisciplina, "Selecione a Disciplina", disciplinas));
-        layoutProfessor.setOnClickListener(v -> mostrarDialogo(txtProfessor, "Selecione o Professor(a)", professores));
-        layoutSala.setOnClickListener(v -> mostrarDialogo(txtSala, "Selecione a Sala", salas));
+        String[] horariosInicio = {
+                "07:30",
+                "08:20",
+                "09:30",
+                "10:20",
+                "10:50",
+                "13:30",
+                "14:20",
+                "15:10",
+                "16:00",
+                "19:00",
+                "20:00"
+        };
 
-        // 5. Configurar os botões de fechar e voltar
+        String[] horariosTermino = {
+                "08:20",
+                "09:10",
+                "10:20",
+                "11:10",
+                "11:30",
+                "14:20",
+                "15:10",
+                "16:00",
+                "17:00",
+                "20:00",
+                "21:00"
+        };
+
+        String[] cursos = {
+                "Computação Gráfica 2024",
+                "Guia de Turismo",
+                "Enfermagem",
+                "Administração",
+                "Informática"
+        };
+
+        String[] disciplinas = {
+                "Animação de Computador II",
+                "Computação Gráfica",
+                "Desenho Técnico",
+                "Geografia",
+                "Modelagem 3D",
+                "Banco de Dados",
+                "Desenvolvimento Web",
+                "Lógica de Programação",
+                "Redes de Computadores"
+        };
+
+        String[] professores = {
+                "Adrielle Veras",
+                "Adrielle",
+                "Alessandra",
+                "Prof. Alan Turing",
+                "Profª. Ada Lovelace",
+                "Prof. Grace Hopper"
+        };
+
+        layoutDiaSemana.setOnClickListener(v ->
+                mostrarDialogo(txtDiaSemana, "Selecione o Dia", dias));
+
+        layoutInicio.setOnClickListener(v ->
+                mostrarDialogo(txtInicio, "Horário de Início", horariosInicio));
+
+        layoutTermino.setOnClickListener(v ->
+                mostrarDialogo(txtTermino, "Horário de Término", horariosTermino));
+
+        layoutCurso.setOnClickListener(v ->
+                mostrarDialogo(txtCurso, "Selecione o Curso", cursos));
+
+        layoutDisciplina.setOnClickListener(v ->
+                mostrarDialogo(txtDisciplina, "Selecione a Disciplina", disciplinas));
+
+        layoutProfessor.setOnClickListener(v ->
+                mostrarDialogo(txtProfessor, "Selecione o Professor(a)", professores));
+
         Button btnVoltar = findViewById(R.id.btnVoltar);
         ImageView btnFechar = findViewById(R.id.btnFechar);
 
-        if (btnVoltar != null) btnVoltar.setOnClickListener(v -> finish());
-        if (btnFechar != null) btnFechar.setOnClickListener(v -> finish());
-
-        // 6. Configurar a ação do botão Salvar (Agora dentro do escopo correto!)
-        androidx.appcompat.widget.AppCompatButton btnSalvarHorario = findViewById(R.id.btnSalvarHorario);
-        if (btnSalvarHorario != null) {
-            btnSalvarHorario.setOnClickListener(v -> {
-                String dia = txtDiaSemana.getText().toString();
-                String disciplina = txtDisciplina.getText().toString();
-
-                if (dia.equals("Selecione o dia da semana") || disciplina.equals("Selecione a disciplina")) {
-                    Toast.makeText(this, "Por favor, preencha os campos obrigatórios!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Horário Salvo com Sucesso!", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            });
+        if (btnVoltar != null) {
+            btnVoltar.setOnClickListener(v -> finish());
         }
-    } // Fim do onCreate
 
-    // Função para exibir a lista de seleção moderna e atualizar o texto
+        if (btnFechar != null) {
+            btnFechar.setOnClickListener(v -> finish());
+        }
+
+        androidx.appcompat.widget.AppCompatButton btnSalvarHorario = findViewById(R.id.btnSalvarHorario);
+
+        if (btnSalvarHorario != null) {
+            btnSalvarHorario.setOnClickListener(v -> salvarHorarioFirebase());
+        }
+    }
+
+    private void salvarHorarioFirebase() {
+        String dia = txtDiaSemana.getText().toString().trim();
+        String inicio = txtInicio.getText().toString().trim();
+        String termino = txtTermino.getText().toString().trim();
+        String curso = txtCurso.getText().toString().trim();
+        String disciplina = txtDisciplina.getText().toString().trim();
+        String professor = txtProfessor.getText().toString().trim();
+
+        if (dia.equals("Selecione o dia da semana") || dia.isEmpty()) {
+            Toast.makeText(this, "Selecione o dia da semana.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (inicio.equals("Selecione o horário de início") || inicio.isEmpty()) {
+            Toast.makeText(this, "Selecione o horário de início.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (termino.equals("Selecione o horário de término") || termino.isEmpty()) {
+            Toast.makeText(this, "Selecione o horário de término.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (curso.equals("Selecione o curso") || curso.isEmpty()) {
+            Toast.makeText(this, "Selecione o curso.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (disciplina.equals("Selecione a disciplina") || disciplina.isEmpty()) {
+            Toast.makeText(this, "Selecione a disciplina.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (professor.equals("Selecione o professor(a)") || professor.isEmpty()) {
+            Toast.makeText(this, "Selecione o professor.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String horarioCompleto = inicio + "-" + termino;
+        String turno = descobrirTurno(inicio);
+
+        Map<String, Object> dados = new HashMap<>();
+        dados.put("Curso", curso);
+        dados.put("Dia", dia);
+        dados.put("Disciplina", disciplina);
+        dados.put("Horario", horarioCompleto);
+        dados.put("Professor", professor);
+        dados.put("Turno", turno);
+
+        db.collection("grade")
+                .add(dados)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Horário salvo com sucesso!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Erro ao salvar: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                );
+    }
+
+    private String descobrirTurno(String inicio) {
+        if (inicio.startsWith("07")
+                || inicio.startsWith("08")
+                || inicio.startsWith("09")
+                || inicio.startsWith("10")
+                || inicio.startsWith("11")) {
+            return "Manhã";
+        }
+
+        if (inicio.startsWith("13")
+                || inicio.startsWith("14")
+                || inicio.startsWith("15")
+                || inicio.startsWith("16")
+                || inicio.startsWith("17")) {
+            return "Tarde";
+        }
+
+        if (inicio.startsWith("18")
+                || inicio.startsWith("19")
+                || inicio.startsWith("20")
+                || inicio.startsWith("21")
+                || inicio.startsWith("22")) {
+            return "Noite";
+        }
+
+        return "Não informado";
+    }
+
     private void mostrarDialogo(TextView campoTexto, String titulo, String[] itens) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
         builder.setTitle(titulo);
+
         builder.setItems(itens, (dialog, which) -> {
             campoTexto.setText(itens[which]);
         });
+
         builder.show();
     }
 }

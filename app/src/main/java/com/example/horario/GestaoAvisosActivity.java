@@ -1,6 +1,7 @@
 package com.example.horario;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -55,6 +56,8 @@ public class GestaoAvisosActivity extends AppCompatActivity {
         layoutListaAvisos = findViewById(R.id.layoutListaAvisos);
         textTotalAvisos = findViewById(R.id.textTotalAvisos);
 
+        configurarRadioButtons();
+
         btnPublicar.setOnClickListener(v -> publicarAviso());
         btnVoltar.setOnClickListener(v -> finish());
 
@@ -66,13 +69,32 @@ public class GestaoAvisosActivity extends AppCompatActivity {
 
         editBuscarAviso.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 carregarAvisosPublicados(s.toString());
             }
+
             @Override public void afterTextChanged(Editable s) {}
         });
 
         carregarAvisosPublicados("");
+    }
+
+    private void configurarRadioButtons() {
+        ColorStateList azulSelecionado = new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        Color.parseColor("#2563EB"),
+                        Color.parseColor("#FFFFFF")
+                }
+        );
+
+        radioNormal.setButtonTintList(azulSelecionado);
+        radioUrgente.setButtonTintList(azulSelecionado);
+        radioNormal.setChecked(true);
     }
 
     private void publicarAviso() {
@@ -168,13 +190,7 @@ public class GestaoAvisosActivity extends AppCompatActivity {
         GradientDrawable fundo = new GradientDrawable();
         fundo.setColor(Color.parseColor("#07163D"));
         fundo.setCornerRadius(28);
-
-        if (urgente) {
-            fundo.setStroke(3, Color.parseColor("#E84142"));
-        } else {
-            fundo.setStroke(3, Color.parseColor("#3158C9"));
-        }
-
+        fundo.setStroke(2, Color.parseColor("#1E3A8A"));
         card.setBackground(fundo);
 
         LinearLayout.LayoutParams paramsCard = new LinearLayout.LayoutParams(
@@ -204,8 +220,8 @@ public class GestaoAvisosActivity extends AppCompatActivity {
         botoes.setOrientation(LinearLayout.HORIZONTAL);
         botoes.setGravity(Gravity.END);
 
-        Button btnEditar = criarBotaoPequeno("Editar", "#7B61FF");
-        Button btnExcluir = criarBotaoPequeno("Excluir", "#D32F2F");
+        Button btnEditar = criarBotaoPequeno("✏", "#2563EB");
+        Button btnExcluir = criarBotaoPequeno("🗑", "#E84142");
 
         btnEditar.setOnClickListener(v -> abrirDialogEditar(id, titulo, descricao, urgente));
         btnExcluir.setOnClickListener(v -> confirmarExclusao(id));
@@ -223,17 +239,19 @@ public class GestaoAvisosActivity extends AppCompatActivity {
     private Button criarBotaoPequeno(String texto, String cor) {
         Button botao = new Button(this);
         botao.setText(texto);
+        botao.setTextSize(18);
         botao.setTextColor(Color.WHITE);
-        botao.setTextSize(12);
         botao.setAllCaps(false);
+        botao.setGravity(Gravity.CENTER);
+        botao.setPadding(0, 0, 0, 0);
 
         GradientDrawable bg = new GradientDrawable();
         bg.setColor(Color.parseColor(cor));
-        bg.setCornerRadius(20);
+        bg.setCornerRadius(100);
         botao.setBackground(bg);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 48, 1);
-        params.setMargins(6, 0, 0, 0);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(85, 85);
+        params.setMargins(10, 0, 0, 0);
         botao.setLayoutParams(params);
 
         return botao;
@@ -261,6 +279,20 @@ public class GestaoAvisosActivity extends AppCompatActivity {
         RadioButton radioUrgenteDialog = new RadioButton(this);
         radioUrgenteDialog.setText("Urgente");
         radioUrgenteDialog.setChecked(urgenteAtual);
+
+        ColorStateList azulSelecionado = new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        Color.parseColor("#2563EB"),
+                        Color.parseColor("#111827")
+                }
+        );
+
+        radioNormalDialog.setButtonTintList(azulSelecionado);
+        radioUrgenteDialog.setButtonTintList(azulSelecionado);
 
         radioNormalDialog.setOnClickListener(v -> radioUrgenteDialog.setChecked(false));
         radioUrgenteDialog.setOnClickListener(v -> radioNormalDialog.setChecked(false));
@@ -307,13 +339,6 @@ public class GestaoAvisosActivity extends AppCompatActivity {
                 );
     }
 
-    private String valorSeguro(String texto) {
-        if (texto == null || texto.trim().isEmpty()) {
-            return "Não informado";
-        }
-        return texto;
-    }
-
     private void confirmarExclusao(String id) {
         new AlertDialog.Builder(this)
                 .setTitle("Excluir aviso")
@@ -335,5 +360,12 @@ public class GestaoAvisosActivity extends AppCompatActivity {
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Erro ao excluir: " + e.getMessage(), Toast.LENGTH_LONG).show()
                 );
+    }
+
+    private String valorSeguro(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            return "Não informado";
+        }
+        return texto;
     }
 }
