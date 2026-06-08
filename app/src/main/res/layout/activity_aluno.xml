@@ -21,7 +21,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:src="@drawable/ic_calendar"
-                app:tint="#7B61FF" />
+                app:tint="#2563EB" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Carregando informações..."
-                    android:textColor="#DFDFEB"
+                    android:textColor="#AEB9D8"
                     android:textSize="14sp" />
             </LinearLayout>
         </RelativeLayout>
@@ -74,12 +74,12 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardSegunda"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="#081B55"
                     app:cardCornerRadius="18dp">
 
                     <RelativeLayout
@@ -93,17 +93,24 @@
                             android:layout_height="26dp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_calendar"
-                            app:tint="#7B61FF" />
+                            app:tint="#2563EB" />
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="18dp"
                             android:layout_toEndOf="@id/i1"
-                            android:text="Segunda-feira"
-                            android:textColor="#3F3D89"
-                            android:textSize="16sp" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Segunda-feira"
+                                android:textColor="#FFFFFF"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
                         <ImageView
                             android:layout_width="20dp"
@@ -111,19 +118,19 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_chevron_right"
-                            app:tint="#7B61FF" />
+                            app:tint="#2563EB" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardTerca"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="#081B55"
                     app:cardCornerRadius="18dp">
 
                     <RelativeLayout
@@ -137,17 +144,24 @@
                             android:layout_height="26dp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_calendar"
-                            app:tint="#7B61FF" />
+                            app:tint="#2563EB" />
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="18dp"
                             android:layout_toEndOf="@id/i2"
-                            android:text="Terça-feira"
-                            android:textColor="#3F3D89"
-                            android:textSize="16sp" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Terça-feira"
+                                android:textColor="#FFFFFF"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
                         <ImageView
                             android:layout_width="20dp"
@@ -155,19 +169,19 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_chevron_right"
-                            app:tint="#7B61FF" />
+                            app:tint="#2563EB" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardQuarta"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="#081B55"
                     app:cardCornerRadius="18dp">
 
                     <RelativeLayout
@@ -181,17 +195,24 @@
                             android:layout_height="26dp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_calendar"
-                            app:tint="#7B61FF" />
+                            app:tint="#2563EB" />
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="18dp"
                             android:layout_toEndOf="@id/i3"
-                            android:text="Quarta-feira"
-                            android:textColor="#3F3D89"
-                            android:textSize="16sp" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Quarta-feira"
+                                android:textColor="#FFFFFF"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
                         <ImageView
                             android:layout_width="20dp"
@@ -199,19 +220,19 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_chevron_right"
-                            app:tint="#7B61FF" />
+                            app:tint="#2563EB" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardQuinta"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="#081B55"
                     app:cardCornerRadius="18dp">
 
                     <RelativeLayout
@@ -225,17 +246,25 @@
                             android:layout_height="26dp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_calendar"
-                            app:tint="#7B61FF" />
+                            app:tint="#2563EB" />
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="18dp"
                             android:layout_toEndOf="@id/i4"
-                            android:text="Quinta-feira"
-                            android:textColor="#3F3D89"
-                            android:textSize="16sp" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Quinta-feira"
+                                android:textColor="#FFFFFF"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
 
                         <ImageView
                             android:layout_width="20dp"
@@ -243,19 +272,19 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_chevron_right"
-                            app:tint="#7B61FF" />
+                            app:tint="#2563EB" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardSexta"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="75dp"
                     android:layout_marginBottom="30dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="#081B55"
                     app:cardCornerRadius="18dp">
 
                     <RelativeLayout
@@ -269,17 +298,24 @@
                             android:layout_height="26dp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_calendar"
-                            app:tint="#7B61FF" />
+                            app:tint="#2563EB" />
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="18dp"
                             android:layout_toEndOf="@id/i5"
-                            android:text="Sexta-feira"
-                            android:textColor="#3F3D89"
-                            android:textSize="16sp" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sexta-feira"
+                                android:textColor="#FFFFFF"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
                         <ImageView
                             android:layout_width="20dp"
@@ -287,7 +323,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_chevron_right"
-                            app:tint="#7B61FF" />
+                            app:tint="#2563EB" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 

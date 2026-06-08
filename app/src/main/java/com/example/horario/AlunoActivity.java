@@ -5,8 +5,11 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
+import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -197,18 +200,18 @@ public class AlunoActivity extends AppCompatActivity {
                 .whereEqualTo("Dia", dia)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    ArrayList<String> horarios = new ArrayList<>();
+                    ArrayList<AulaHorario> horarios = new ArrayList<>();
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String horario = document.getString("Horario");
                         String disciplina = document.getString("Disciplina");
                         String professor = document.getString("Professor");
 
-                        horarios.add(
-                                "Horário: " + valorSeguro(horario) + "\n\n" +
-                                        "Matéria: " + valorSeguro(disciplina) + "\n\n" +
-                                        "Professor: " + valorSeguro(professor)
-                        );
+                        horarios.add(new AulaHorario(
+                                valorSeguro(horario),
+                                valorSeguro(disciplina),
+                                valorSeguro(professor)
+                        ));
                     }
 
                     if (horarios.isEmpty()) {
@@ -226,8 +229,127 @@ public class AlunoActivity extends AppCompatActivity {
         mostrarDialogoPersonalizado("📢 Avisos", avisos);
     }
 
-    private void mostrarDialogoHorario(String dia, ArrayList<String> horarios) {
-        mostrarDialogoPersonalizado("📅 Horário de " + dia, horarios);
+    private void mostrarDialogoHorario(String dia, ArrayList<AulaHorario> horarios) {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setPadding(32, 28, 32, 32);
+
+        GradientDrawable fundo = new GradientDrawable();
+        fundo.setColor(Color.parseColor("#07163D"));
+        fundo.setCornerRadius(42);
+        fundo.setStroke(2, Color.parseColor("#2563EB"));
+        container.setBackground(fundo);
+
+        LinearLayout topo = new LinearLayout(this);
+        topo.setOrientation(LinearLayout.HORIZONTAL);
+        topo.setGravity(Gravity.CENTER_VERTICAL);
+
+        TextView titulo = new TextView(this);
+        titulo.setText("Horário de " + dia);
+        titulo.setTextColor(Color.WHITE);
+        titulo.setTextSize(24);
+        titulo.setTypeface(null, Typeface.BOLD);
+
+        LinearLayout.LayoutParams paramsTitulo = new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                1
+        );
+
+        topo.addView(titulo, paramsTitulo);
+
+        ImageButton btnX = new ImageButton(this);
+        btnX.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        btnX.setColorFilter(Color.WHITE);
+        btnX.setBackgroundColor(Color.TRANSPARENT);
+        btnX.setPadding(10, 10, 10, 10);
+        btnX.setOnClickListener(v -> dialog.dismiss());
+
+        topo.addView(btnX, new LinearLayout.LayoutParams(70, 70));
+
+        container.addView(topo);
+
+        ScrollView scrollView = new ScrollView(this);
+
+        LinearLayout lista = new LinearLayout(this);
+        lista.setOrientation(LinearLayout.VERTICAL);
+        lista.setPadding(0, 22, 0, 0);
+
+        for (AulaHorario aula : horarios) {
+            LinearLayout card = new LinearLayout(this);
+            card.setOrientation(LinearLayout.VERTICAL);
+            card.setPadding(26, 22, 26, 22);
+
+            GradientDrawable bgCard = new GradientDrawable(
+                    GradientDrawable.Orientation.LEFT_RIGHT,
+                    new int[]{
+                            Color.parseColor("#0037FF"),
+                            Color.parseColor("#081B55")
+                    }
+            );
+            bgCard.setCornerRadius(26);
+            bgCard.setStroke(1, Color.parseColor("#2563EB"));
+            card.setBackground(bgCard);
+
+            TextView txtHorario = new TextView(this);
+            txtHorario.setText("⏰ " + aula.horario);
+            txtHorario.setTextColor(Color.parseColor("#16E0C4"));
+            txtHorario.setTextSize(18);
+            txtHorario.setTypeface(null, Typeface.BOLD);
+
+            TextView txtDisciplina = new TextView(this);
+            txtDisciplina.setText(aula.disciplina);
+            txtDisciplina.setTextColor(Color.WHITE);
+            txtDisciplina.setTextSize(21);
+            txtDisciplina.setTypeface(null, Typeface.BOLD);
+            txtDisciplina.setPadding(0, 8, 0, 6);
+
+            TextView txtProfessor = new TextView(this);
+            txtProfessor.setText("Professor(a): " + aula.professor);
+            txtProfessor.setTextColor(Color.WHITE);
+            txtProfessor.setTextSize(16);
+
+            card.addView(txtHorario);
+            card.addView(txtDisciplina);
+            card.addView(txtProfessor);
+
+            LinearLayout.LayoutParams paramsCard = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            paramsCard.setMargins(0, 0, 0, 14);
+
+            lista.addView(card, paramsCard);
+        }
+
+        scrollView.addView(lista);
+
+        LinearLayout.LayoutParams paramsScroll = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+
+        container.addView(scrollView, paramsScroll);
+
+        dialog.setContentView(container);
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        dialog.show();
+
+        Window janela = dialog.getWindow();
+        if (janela != null) {
+            janela.setLayout(
+                    (int) (getResources().getDisplayMetrics().widthPixels * 0.92),
+                    WindowManager.LayoutParams.WRAP_CONTENT
+            );
+        }
     }
 
     private void mostrarDialogoPersonalizado(String tituloTexto, ArrayList<String> itens) {
@@ -243,7 +365,7 @@ public class AlunoActivity extends AppCompatActivity {
         GradientDrawable fundo = new GradientDrawable();
         fundo.setColor(Color.parseColor("#07163D"));
         fundo.setCornerRadius(38);
-        fundo.setStroke(2, Color.parseColor("#263B7A"));
+        fundo.setStroke(2, Color.parseColor("#2563EB"));
         container.setBackground(fundo);
 
         TextView titulo = new TextView(this);
@@ -261,11 +383,15 @@ public class AlunoActivity extends AppCompatActivity {
             card.setTextSize(16);
             card.setPadding(30, 25, 30, 25);
 
-            boolean urgente = item.startsWith("🔴");
+            GradientDrawable bgCard = new GradientDrawable(
+                    GradientDrawable.Orientation.LEFT_RIGHT,
+                    new int[]{
+                            Color.parseColor("#0D47A1"),
+                            Color.parseColor("#0B1B4D")
+                    }
+            );
 
-            GradientDrawable bgCard;
-
-            if (urgente) {
+            if (item.startsWith("🔴")) {
                 bgCard = new GradientDrawable(
                         GradientDrawable.Orientation.LEFT_RIGHT,
                         new int[]{
@@ -275,14 +401,7 @@ public class AlunoActivity extends AppCompatActivity {
                 );
                 bgCard.setStroke(2, Color.parseColor("#FF4444"));
             } else {
-                bgCard = new GradientDrawable(
-                        GradientDrawable.Orientation.LEFT_RIGHT,
-                        new int[]{
-                                Color.parseColor("#5B2EFF"),
-                                Color.parseColor("#0B1B4D")
-                        }
-                );
-                bgCard.setStroke(1, Color.parseColor("#314D9B"));
+                bgCard.setStroke(1, Color.parseColor("#2563EB"));
             }
 
             bgCard.setCornerRadius(26);
@@ -298,17 +417,19 @@ public class AlunoActivity extends AppCompatActivity {
             container.addView(card);
         }
 
-        Button btnFechar = new Button(this);
-        btnFechar.setText("✓ Fechar");
-        btnFechar.setTextSize(18);
+        TextView btnFechar = new TextView(this);
+        btnFechar.setText("Fechar");
         btnFechar.setTextColor(Color.WHITE);
-        btnFechar.setAllCaps(false);
+        btnFechar.setTextSize(17);
+        btnFechar.setTypeface(null, Typeface.BOLD);
+        btnFechar.setGravity(Gravity.CENTER);
+        btnFechar.setPadding(0, 22, 0, 22);
 
         GradientDrawable bgBotao = new GradientDrawable(
                 GradientDrawable.Orientation.LEFT_RIGHT,
                 new int[]{
-                        Color.parseColor("#6C35FF"),
-                        Color.parseColor("#332DCC")
+                        Color.parseColor("#2563EB"),
+                        Color.parseColor("#1D4ED8")
                 }
         );
 
@@ -317,16 +438,14 @@ public class AlunoActivity extends AppCompatActivity {
 
         LinearLayout.LayoutParams paramsBotao = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                110
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
         paramsBotao.setMargins(0, 15, 0, 0);
-        btnFechar.setLayoutParams(paramsBotao);
 
+        container.addView(btnFechar, paramsBotao);
         btnFechar.setOnClickListener(v -> dialog.dismiss());
 
-        container.addView(btnFechar);
         scrollView.addView(container);
-
         dialog.setContentView(scrollView);
 
         Window window = dialog.getWindow();
@@ -342,5 +461,17 @@ public class AlunoActivity extends AppCompatActivity {
             return "Não informado";
         }
         return texto;
+    }
+
+    private static class AulaHorario {
+        String horario;
+        String disciplina;
+        String professor;
+
+        AulaHorario(String horario, String disciplina, String professor) {
+            this.horario = horario;
+            this.disciplina = disciplina;
+            this.professor = professor;
+        }
     }
 }

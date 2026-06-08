@@ -74,6 +74,8 @@ public class GerenciarProfessores extends AppCompatActivity {
                         vinculo.put("disciplina", valorSeguro(documento.getString("Disciplina")));
                         vinculo.put("turma", valorSeguro(documento.getString("Turma")));
                         vinculo.put("turno", valorSeguro(documento.getString("Turno")));
+                        vinculo.put("dia", valorSeguro(documento.getString("Dia")));
+                        vinculo.put("horario", valorSeguro(documento.getString("Horario")));
 
                         if (!professoresUnicos.containsKey(email)) {
                             Map<String, Object> professor = new HashMap<>();
@@ -108,13 +110,6 @@ public class GerenciarProfessores extends AppCompatActivity {
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Erro ao carregar professores: " + e.getMessage(), Toast.LENGTH_LONG).show()
                 );
-    }
-
-    private String valorSeguro(String texto) {
-        if (texto == null || texto.trim().isEmpty()) {
-            return "Não informado";
-        }
-        return texto;
     }
 
     private void mostrarProfessoresNaTela() {
@@ -179,7 +174,11 @@ public class GerenciarProfessores extends AppCompatActivity {
             txtQuantidade.setTypeface(null, Typeface.BOLD);
             txtQuantidade.setPadding(0, 10, 0, 0);
 
-            Button btnVerVinculos = criarBotao(expandido ? "▲ OCULTAR VÍNCULOS" : "▼ VER VÍNCULOS", "#081B55");
+            Button btnVerVinculos = criarBotao(
+                    expandido ? "▲ OCULTAR VÍNCULOS" : "▼ VER VÍNCULOS",
+                    "#081B55"
+            );
+
             btnVerVinculos.setOnClickListener(v -> {
                 professor.put("expandido", !expandido);
                 mostrarProfessoresNaTela();
@@ -216,7 +215,9 @@ public class GerenciarProfessores extends AppCompatActivity {
                             (i + 1) + ". Curso: " + vinculo.get("curso") +
                                     "\nMatéria: " + vinculo.get("disciplina") +
                                     "\nTurma: " + vinculo.get("turma") +
-                                    "\nTurno: " + vinculo.get("turno")
+                                    "\nTurno: " + vinculo.get("turno") +
+                                    "\nDia: " + vinculo.get("dia") +
+                                    "\nHorário: " + vinculo.get("horario")
                     );
 
                     txtVinculo.setTextColor(Color.parseColor("#16E0C4"));
@@ -249,6 +250,7 @@ public class GerenciarProfessores extends AppCompatActivity {
         botao.setTextColor(Color.WHITE);
         botao.setTextSize(13);
         botao.setTypeface(null, Typeface.BOLD);
+        botao.setAllCaps(false);
         botao.setBackgroundColor(Color.parseColor(cor));
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -345,11 +347,15 @@ public class GerenciarProfessores extends AppCompatActivity {
         EditText editDisciplina = criarCampo("Matéria", "");
         EditText editTurma = criarCampo("Turma", "");
         EditText editTurno = criarCampo("Turno", "");
+        EditText editDia = criarCampo("Dia", "");
+        EditText editHorario = criarCampo("Horário", "");
 
         layout.addView(editCurso);
         layout.addView(editDisciplina);
         layout.addView(editTurma);
         layout.addView(editTurno);
+        layout.addView(editDia);
+        layout.addView(editHorario);
 
         new AlertDialog.Builder(this)
                 .setTitle("Adicionar vínculo")
@@ -359,19 +365,31 @@ public class GerenciarProfessores extends AppCompatActivity {
                     String disciplina = editDisciplina.getText().toString().trim();
                     String turma = editTurma.getText().toString().trim();
                     String turno = editTurno.getText().toString().trim();
+                    String dia = editDia.getText().toString().trim();
+                    String horario = editHorario.getText().toString().trim();
 
-                    if (curso.isEmpty() || disciplina.isEmpty() || turma.isEmpty() || turno.isEmpty()) {
+                    if (curso.isEmpty() || disciplina.isEmpty() || turma.isEmpty()
+                            || turno.isEmpty() || dia.isEmpty() || horario.isEmpty()) {
                         Toast.makeText(this, "Preencha todos os campos.", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    adicionarVinculo(nomeProfessor, emailProfessor, curso, disciplina, turma, turno);
+                    adicionarVinculo(nomeProfessor, emailProfessor, curso, disciplina, turma, turno, dia, horario);
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
 
-    private void adicionarVinculo(String nomeProfessor, String emailProfessor, String curso, String disciplina, String turma, String turno) {
+    private void adicionarVinculo(
+            String nomeProfessor,
+            String emailProfessor,
+            String curso,
+            String disciplina,
+            String turma,
+            String turno,
+            String dia,
+            String horario
+    ) {
         DocumentReference ref = db.collection("grade").document();
 
         Map<String, Object> dados = new HashMap<>();
@@ -381,6 +399,8 @@ public class GerenciarProfessores extends AppCompatActivity {
         dados.put("Disciplina", disciplina);
         dados.put("Turma", turma);
         dados.put("Turno", turno);
+        dados.put("Dia", dia);
+        dados.put("Horario", horario);
 
         ref.set(dados)
                 .addOnSuccessListener(unused -> {
@@ -395,7 +415,7 @@ public class GerenciarProfessores extends AppCompatActivity {
     private void confirmarExclusao(String nome, String email) {
         new AlertDialog.Builder(this)
                 .setTitle("Excluir professor")
-                .setMessage("Deseja excluir " + nome + " e todos os vínculos dele da grade?")
+                .setMessage("Tem certeza que deseja excluir o professor " + nome + "?\n\nTodos os vínculos dele serão apagados da coleção grade.")
                 .setPositiveButton("Sim, excluir", (dialog, which) -> deletarProfessor(email))
                 .setNegativeButton("Cancelar", null)
                 .show();
@@ -425,6 +445,16 @@ public class GerenciarProfessores extends AppCompatActivity {
                             .addOnFailureListener(e ->
                                     Toast.makeText(this, "Erro ao excluir: " + e.getMessage(), Toast.LENGTH_LONG).show()
                             );
-                });
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Erro ao buscar professor: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                );
+    }
+
+    private String valorSeguro(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            return "Não informado";
+        }
+        return texto;
     }
 }

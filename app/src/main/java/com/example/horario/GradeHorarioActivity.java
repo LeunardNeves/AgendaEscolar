@@ -1,11 +1,18 @@
 package com.example.horario;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.view.View;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,254 +22,356 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public class GradeHorarioActivity extends AppCompatActivity {
 
+    private Button btnVoltar;
+    private TextView btnMenu;
+    private EditText editPesquisar;
+    private LinearLayout layoutDias, layoutHorarios;
     private FirebaseFirestore db;
 
-    private LinearLayout layoutSegunda;
-    private LinearLayout layoutTerca;
-    private LinearLayout layoutQuarta;
-    private LinearLayout layoutQuinta;
-    private LinearLayout layoutSexta;
+    private String diaSelecionado = "SEG";
+    private String textoPesquisa = "";
+
+    private final String[] dias = {"SEG", "TER", "QUA", "QUI", "SEX"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grade_horario);
 
         db = FirebaseFirestore.getInstance();
 
-        Button btnVoltar = findViewById(R.id.btnVoltar);
-        Button btnAtualizar = findViewById(R.id.btnAtualizarGrade);
-
-        Button btnAdicionarSegunda = findViewById(R.id.btnAdicionarSegunda);
-        Button btnAdicionarTerca = findViewById(R.id.btnAdicionarTerca);
-        Button btnAdicionarQuarta = findViewById(R.id.btnAdicionarQuarta);
-        Button btnAdicionarQuinta = findViewById(R.id.btnAdicionarQuinta);
-        Button btnAdicionarSexta = findViewById(R.id.btnAdicionarSexta);
-
-        layoutSegunda = findViewById(R.id.layoutSegunda);
-        layoutTerca = findViewById(R.id.layoutTerca);
-        layoutQuarta = findViewById(R.id.layoutQuarta);
-        layoutQuinta = findViewById(R.id.layoutQuinta);
-        layoutSexta = findViewById(R.id.layoutSexta);
+        btnVoltar = findViewById(R.id.btnVoltar);
+        btnMenu = findViewById(R.id.btnMenu);
+        editPesquisar = findViewById(R.id.editPesquisar);
+        layoutDias = findViewById(R.id.layoutDias);
+        layoutHorarios = findViewById(R.id.layoutHorarios);
 
         btnVoltar.setOnClickListener(v -> finish());
 
-        btnAtualizar.setOnClickListener(v -> carregarGradeFirebase());
+        btnMenu.setOnClickListener(v -> {
+            Intent intent = new Intent(this, novo_horario.class);
+            startActivity(intent);
+        });
 
-        btnAdicionarSegunda.setOnClickListener(v -> abrirNovoHorario("Segunda-feira"));
-        btnAdicionarTerca.setOnClickListener(v -> abrirNovoHorario("Terça-feira"));
-        btnAdicionarQuarta.setOnClickListener(v -> abrirNovoHorario("Quarta-feira"));
-        btnAdicionarQuinta.setOnClickListener(v -> abrirNovoHorario("Quinta-feira"));
-        btnAdicionarSexta.setOnClickListener(v -> abrirNovoHorario("Sexta-feira"));
+        editPesquisar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-        carregarGradeFirebase();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                textoPesquisa = s.toString().trim().toLowerCase();
+                carregarGrade();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        criarBotoesDias();
+        carregarGrade();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        carregarGradeFirebase();
+        carregarGrade();
     }
 
-    private void abrirNovoHorario(String dia) {
-        Intent intent = new Intent(GradeHorarioActivity.this, novo_horario.class);
-        intent.putExtra("dia", dia);
-        startActivity(intent);
+    private void criarBotoesDias() {
+        layoutDias.removeAllViews();
+
+        for (String dia : dias) {
+            TextView btnDia = new TextView(this);
+            btnDia.setText(dia);
+            btnDia.setGravity(Gravity.CENTER);
+            btnDia.setTextSize(16);
+            btnDia.setTypeface(null, Typeface.BOLD);
+            btnDia.setPadding(dp(22), dp(16), dp(22), dp(16));
+
+            if (dia.equals(diaSelecionado)) {
+                btnDia.setTextColor(Color.WHITE);
+                btnDia.setBackground(criarFundo("#21113D", "#B84DFF", 22));
+            } else {
+                btnDia.setTextColor(Color.parseColor("#D8D8E8"));
+                btnDia.setBackground(criarFundo("#07163D", "#13254F", 22));
+            }
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(92), dp(72));
+            params.setMargins(0, 0, dp(12), 0);
+            btnDia.setLayoutParams(params);
+
+            btnDia.setOnClickListener(v -> {
+                diaSelecionado = dia;
+                criarBotoesDias();
+                carregarGrade();
+            });
+
+            layoutDias.addView(btnDia);
+        }
     }
 
-    private void carregarGradeFirebase() {
-        limparLayouts();
+    private void carregarGrade() {
+        layoutHorarios.removeAllViews();
 
         db.collection("grade")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<Map<String, String>> lista = new ArrayList<>();
 
-                    if (queryDocumentSnapshots.isEmpty()) {
-                        Toast.makeText(
-                                this,
-                                "Nenhum horário encontrado na coleção grade",
-                                Toast.LENGTH_LONG
-                        ).show();
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String dia = pegarCampo(doc, "Dia", "dia", "diaSemana", "DiaSemana");
+
+                        if (!diaPertenceAoSelecionado(dia)) {
+                            continue;
+                        }
+
+                        String disciplina = pegarCampo(doc, "Disciplina", "disciplina", "materia", "Materia");
+                        String professor = pegarCampo(doc, "Professor", "professor", "professorNome", "ProfessorNome");
+
+                        if (!textoPesquisa.isEmpty()) {
+                            String disciplinaLower = disciplina.toLowerCase();
+                            String professorLower = professor.toLowerCase();
+
+                            if (!disciplinaLower.contains(textoPesquisa)
+                                    && !professorLower.contains(textoPesquisa)) {
+                                continue;
+                            }
+                        }
+
+                        Map<String, String> item = new HashMap<>();
+                        item.put("id", doc.getId());
+                        item.put("Dia", dia);
+                        item.put("Horario", pegarCampo(doc, "Horario"));
+                        item.put("Disciplina", disciplina);
+                        item.put("Professor", professor);
+                        item.put("Sala", pegarCampo(doc, "Sala", "sala"));
+
+                        lista.add(item);
+                    }
+
+                    Collections.sort(lista, (a, b) -> a.get("Horario").compareTo(b.get("Horario")));
+
+                    if (lista.isEmpty()) {
+                        TextView vazio = new TextView(this);
+
+                        if (textoPesquisa.isEmpty()) {
+                            vazio.setText("Nenhum horário cadastrado para esse dia.");
+                        } else {
+                            vazio.setText("Nenhum resultado encontrado.");
+                        }
+
+                        vazio.setTextColor(Color.WHITE);
+                        vazio.setTextSize(15);
+                        vazio.setGravity(Gravity.CENTER);
+                        vazio.setPadding(0, dp(30), 0, dp(30));
+                        layoutHorarios.addView(vazio);
                         return;
                     }
 
-                    for (QueryDocumentSnapshot documento : queryDocumentSnapshots) {
-
-                        String curso = documento.getString("Curso");
-                        String dia = documento.getString("Dia");
-                        String disciplina = documento.getString("Disciplina");
-
-                        String horario = documento.getString("Horario");
-
-                        if (horario == null) {
-                            horario = documento.getString("Horário");
-                        }
-
-                        String professor = documento.getString("Professor");
-                        String turno = documento.getString("Turno");
-
-                        if (dia == null) {
-                            Toast.makeText(
-                                    this,
-                                    "Um documento está sem o campo Dia",
-                                    Toast.LENGTH_LONG
-                            ).show();
-                            continue;
-                        }
-
-                        if (disciplina == null) {
-                            Toast.makeText(
-                                    this,
-                                    "Um documento está sem o campo Disciplina",
-                                    Toast.LENGTH_LONG
-                            ).show();
-                            continue;
-                        }
-
-                        if (horario == null) {
-                            Toast.makeText(
-                                    this,
-                                    "Um documento está sem o campo Horario",
-                                    Toast.LENGTH_LONG
-                            ).show();
-                            continue;
-                        }
-
-                        adicionarHorarioNaTela(
-                                dia,
-                                horario,
-                                disciplina,
-                                professor,
-                                curso,
-                                turno
-                        );
+                    for (Map<String, String> item : lista) {
+                        criarCardHorario(item);
                     }
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(
-                            this,
-                            "Erro ao carregar grade: " + e.getMessage(),
-                            Toast.LENGTH_LONG
-                    ).show();
-                });
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Erro ao carregar grade: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 
-    private void limparLayouts() {
-        layoutSegunda.removeAllViews();
-        layoutTerca.removeAllViews();
-        layoutQuarta.removeAllViews();
-        layoutQuinta.removeAllViews();
-        layoutSexta.removeAllViews();
-    }
+    private void criarCardHorario(Map<String, String> item) {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.HORIZONTAL);
+        card.setGravity(Gravity.CENTER_VERTICAL);
+        card.setPadding(dp(12), dp(14), dp(8), dp(14));
+        card.setBackground(criarFundo("#07163D", "#13254F", 18));
 
-    private void adicionarHorarioNaTela(
-            String dia,
-            String horario,
-            String disciplina,
-            String professor,
-            String curso,
-            String turno
-    ) {
-        LinearLayout destino = pegarLayoutDoDia(dia);
-
-        if (destino == null) {
-            Toast.makeText(this, "Dia não reconhecido: " + dia, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (professor == null || professor.isEmpty()) professor = "Não informado";
-        if (curso == null || curso.isEmpty()) curso = "Curso não informado";
-        if (turno == null || turno.isEmpty()) turno = "Turno não informado";
-
-        LinearLayout cardHorario = new LinearLayout(this);
-        cardHorario.setOrientation(LinearLayout.VERTICAL);
-        cardHorario.setPadding(22, 18, 22, 18);
-        cardHorario.setBackgroundResource(R.drawable.bg_item);
-
-        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams paramsCard = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        cardParams.setMargins(0, 0, 0, 14);
-        cardHorario.setLayoutParams(cardParams);
+        paramsCard.setMargins(0, 0, 0, dp(12));
+        card.setLayoutParams(paramsCard);
 
-        TextView txtHorario = new TextView(this);
-        txtHorario.setText("⏰ " + horario);
-        txtHorario.setTextColor(Color.parseColor("#7B61FF"));
-        txtHorario.setTextSize(13);
-        txtHorario.setTypeface(null, android.graphics.Typeface.BOLD);
+        TextView txtHora = new TextView(this);
+        txtHora.setText(item.get("Horario"));
+        txtHora.setTextColor(Color.parseColor("#16E0C4"));
+        txtHora.setTextSize(14);
+        txtHora.setTypeface(null, Typeface.BOLD);
+        txtHora.setGravity(Gravity.CENTER);
+        txtHora.setLayoutParams(new LinearLayout.LayoutParams(dp(95), LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout info = new LinearLayout(this);
+        info.setOrientation(LinearLayout.VERTICAL);
+        info.setPadding(dp(12), 0, dp(8), 0);
+        info.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
 
         TextView txtDisciplina = new TextView(this);
-        txtDisciplina.setText(disciplina);
-        txtDisciplina.setTextColor(Color.parseColor("#FFFFFF"));
-        txtDisciplina.setTextSize(16);
-        txtDisciplina.setTypeface(null, android.graphics.Typeface.BOLD);
-        txtDisciplina.setPadding(0, 8, 0, 4);
+        txtDisciplina.setText(item.get("Disciplina"));
+        txtDisciplina.setTextColor(Color.WHITE);
+        txtDisciplina.setTextSize(15);
+        txtDisciplina.setTypeface(null, Typeface.BOLD);
 
         TextView txtProfessor = new TextView(this);
-        txtProfessor.setText("Professor(a): " + professor);
-        txtProfessor.setTextColor(Color.parseColor("#C9D3F5"));
+        txtProfessor.setText(item.get("Professor"));
+        txtProfessor.setTextColor(Color.parseColor("#D8D8E8"));
         txtProfessor.setTextSize(13);
-        txtProfessor.setPadding(0, 4, 0, 2);
 
-        TextView txtCurso = new TextView(this);
-        txtCurso.setText(curso + " • " + turno);
-        txtCurso.setTextColor(Color.parseColor("#9FAAD0"));
-        txtCurso.setTextSize(12);
-        txtCurso.setPadding(0, 2, 0, 0);
+        TextView txtSala = new TextView(this);
+        txtSala.setText(item.get("Sala"));
+        txtSala.setTextColor(Color.parseColor("#9FA8DA"));
+        txtSala.setTextSize(12);
 
-        cardHorario.addView(txtHorario);
-        cardHorario.addView(txtDisciplina);
-        cardHorario.addView(txtProfessor);
-        cardHorario.addView(txtCurso);
+        info.addView(txtDisciplina);
+        info.addView(txtProfessor);
+        info.addView(txtSala);
 
-        destino.addView(cardHorario);
+        TextView btnOpcoes = new TextView(this);
+        btnOpcoes.setText("⋮");
+        btnOpcoes.setTextColor(Color.WHITE);
+        btnOpcoes.setTextSize(28);
+        btnOpcoes.setGravity(Gravity.CENTER);
+
+        btnOpcoes.setOnClickListener(v -> mostrarMenuCard(btnOpcoes, item));
+
+        card.addView(txtHora);
+        card.addView(info);
+        card.addView(btnOpcoes);
+
+        layoutHorarios.addView(card);
     }
-    private LinearLayout pegarLayoutDoDia(String dia) {
 
-        if (dia == null) {
-            return null;
+    private void mostrarMenuCard(TextView btn, Map<String, String> item) {
+        PopupMenu menu = new PopupMenu(this, btn);
+        menu.getMenu().add("Editar");
+        menu.getMenu().add("Excluir");
+
+        menu.setOnMenuItemClickListener(menuItem -> {
+            String opcao = menuItem.getTitle().toString();
+
+            if (opcao.equals("Editar")) {
+                abrirDialogoEditar(item);
+            } else {
+                confirmarExclusao(item.get("id"));
+            }
+
+            return true;
+        });
+
+        menu.show();
+    }
+
+    private void abrirDialogoEditar(Map<String, String> item) {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(dp(20), dp(10), dp(20), dp(10));
+
+        EditText editDia = criarEditText("Dia", item.get("Dia"));
+        EditText editHorario = criarEditText("Horário", item.get("Horario"));
+        EditText editDisciplina = criarEditText("Disciplina", item.get("Disciplina"));
+        EditText editProfessor = criarEditText("Professor", item.get("Professor"));
+        EditText editSala = criarEditText("Sala", item.get("Sala"));
+
+        layout.addView(editDia);
+        layout.addView(editHorario);
+        layout.addView(editDisciplina);
+        layout.addView(editProfessor);
+        layout.addView(editSala);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Editar horário")
+                .setView(layout)
+                .setPositiveButton("Salvar", (dialog, which) -> {
+                    Map<String, Object> dados = new HashMap<>();
+                    dados.put("Dia", editDia.getText().toString());
+                    dados.put("Horario", editHorario.getText().toString());
+                    dados.put("Disciplina", editDisciplina.getText().toString());
+                    dados.put("Professor", editProfessor.getText().toString());
+                    dados.put("Sala", editSala.getText().toString());
+
+                    db.collection("grade").document(item.get("id"))
+                            .update(dados)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(this, "Horário atualizado!", Toast.LENGTH_SHORT).show();
+                                carregarGrade();
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(this, "Erro ao editar: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                            );
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void confirmarExclusao(String id) {
+        new AlertDialog.Builder(this)
+                .setTitle("Excluir horário")
+                .setMessage("Tem certeza que deseja excluir esse horário?")
+                .setPositiveButton("Excluir", (dialog, which) -> {
+                    db.collection("grade").document(id)
+                            .delete()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(this, "Horário excluído!", Toast.LENGTH_SHORT).show();
+                                carregarGrade();
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(this, "Erro ao excluir: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                            );
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private EditText criarEditText(String hint, String texto) {
+        EditText editText = new EditText(this);
+        editText.setHint(hint);
+        editText.setText(texto);
+        editText.setTextColor(Color.BLACK);
+        editText.setHintTextColor(Color.GRAY);
+        return editText;
+    }
+
+    private String pegarCampo(QueryDocumentSnapshot doc, String... nomes) {
+        for (String nome : nomes) {
+            Object valor = doc.get(nome);
+            if (valor != null) {
+                return valor.toString();
+            }
         }
+        return "";
+    }
 
-        String d = dia
-                .toLowerCase()
-                .trim()
-                .replace("á", "a")
-                .replace("ã", "a")
-                .replace("â", "a")
-                .replace("é", "e")
-                .replace("ê", "e")
-                .replace("í", "i")
-                .replace("ó", "o")
-                .replace("ô", "o")
-                .replace("ú", "u")
-                .replace("ç", "c")
-                .replace("-", " ");
+    private boolean diaPertenceAoSelecionado(String dia) {
+        if (dia == null) return false;
 
-        if (d.contains("segunda")) {
-            return layoutSegunda;
-        }
+        String d = dia.toUpperCase();
 
-        if (d.contains("terca") || d.contains("terça")) {
-            return layoutTerca;
-        }
+        if (diaSelecionado.equals("SEG")) return d.contains("SEG") || d.contains("SEGUNDA");
+        if (diaSelecionado.equals("TER")) return d.contains("TER") || d.contains("TERÇA") || d.contains("TERCA");
+        if (diaSelecionado.equals("QUA")) return d.contains("QUA") || d.contains("QUARTA");
+        if (diaSelecionado.equals("QUI")) return d.contains("QUI") || d.contains("QUINTA");
+        if (diaSelecionado.equals("SEX")) return d.contains("SEX") || d.contains("SEXTA");
 
-        if (d.contains("quarta")) {
-            return layoutQuarta;
-        }
+        return false;
+    }
 
-        if (d.contains("quinta")) {
-            return layoutQuinta;
-        }
+    private GradientDrawable criarFundo(String corFundo, String corBorda, int raio) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(Color.parseColor(corFundo));
+        drawable.setCornerRadius(dp(raio));
+        drawable.setStroke(dp(1), Color.parseColor(corBorda));
+        return drawable;
+    }
 
-        if (d.contains("sexta")) {
-            return layoutSexta;
-        }
-
-        return null;
+    private int dp(int valor) {
+        return (int) (valor * getResources().getDisplayMetrics().density);
     }
 }
