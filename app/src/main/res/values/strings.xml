@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Horário Escolar</string>
+    <string name="app_name">Agenda Escolar</string>
     <string-array name="lista_cursos">
         <item>Selecione seu curso</item>
         <item>Manutenção e Suporte</item>
