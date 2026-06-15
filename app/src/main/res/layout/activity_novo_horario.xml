@@ -363,7 +363,7 @@
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:backgroundTint="#2563EB"
+            app:backgroundTint="#7B61FF"
             app:cornerRadius="28dp"
             app:icon="@drawable/ic_save_custom"
             app:iconGravity="textStart"
