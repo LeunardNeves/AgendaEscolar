@@ -80,7 +80,7 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_school"
-                app:tint="#2962FF" />
+                app:tint="#7B61FF" />
 
             <TextView
                 android:id="@+id/txtCurso"
@@ -115,7 +115,7 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_calendar_custom"
-                app:tint="#2962FF" />
+                app:tint="#7B61FF" />
 
             <TextView
                 android:id="@+id/txtAno"
@@ -150,7 +150,7 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_clock_custom"
-                app:tint="#2962FF" />
+                app:tint="#7B61FF" />
 
             <TextView
                 android:id="@+id/txtTurno"

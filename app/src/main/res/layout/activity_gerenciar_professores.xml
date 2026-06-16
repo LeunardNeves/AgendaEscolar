@@ -49,7 +49,7 @@
             android:layout_height="58dp"
             android:layout_marginTop="22dp"
             android:background="@drawable/bg_input_neon"
-            android:hint="Pesquisar professor..."
+            android:hint="Pesquisar professor"
             android:inputType="text"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
