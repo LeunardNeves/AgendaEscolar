@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="412dp"
+    android:height="870dp"
+    android:viewportWidth="412"
+    android:viewportHeight="870">
+
+    <!-- Fundo Branco Leve / Gelo -->
+    <path
+        android:fillColor="#F8FAFC"
+        android:pathData="M0,0h412v870h-412z"/>
+
+    <!-- Onda Superior Azul Escuro -->
+    <path
+        android:fillColor="#0F172A"
+        android:pathData="M0,0h412v80c-100,50 -250,10 -412,90z"/>
+    <path
+        android:fillColor="#1E3A8A"
+        android:pathData="M0,0h412v50c-120,40 -280,5 -412,70z"/>
+
+    <!-- Onda Inferior Azul Escuro -->
+    <path
+        android:fillColor="#1E3A8A"
+        android:pathData="M0,810c150,-60 280,-10 412,60v0h-412z"/>
+    <path
+        android:fillColor="#0F172A"
+        android:pathData="M0,840c120,-30 250,-10 412,30v0h-412z"/>
+</vector>
