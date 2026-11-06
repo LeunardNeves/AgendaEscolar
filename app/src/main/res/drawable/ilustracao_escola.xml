@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="300dp"
+    android:height="180dp"
+    android:viewportWidth="300"
+    android:viewportHeight="180">
+
+    <!-- Nuvens e fundo -->
+    <path
+        android:fillColor="#DBEAFE"
+        android:pathData="M35,145 C20,120 35,90 70,85
+                          C95,75 110,90 130,83
+                          C160,65 190,80 208,92
+                          C245,75 275,105 268,145 Z" />
+
+    <!-- Corpo da escola -->
+    <path
+        android:fillColor="#93C5FD"
+        android:pathData="M78,85 L222,85 L222,150 L78,150 Z" />
+
+    <!-- Prédio central -->
+    <path
+        android:fillColor="#BFDBFE"
+        android:pathData="M125,65 L175,65 L175,150 L125,150 Z" />
+
+    <!-- Telhado esquerdo -->
+    <path
+        android:fillColor="#1E40AF"
+        android:pathData="M68,91 L88,72 L126,72 L126,91 Z" />
+
+    <!-- Telhado direito -->
+    <path
+        android:fillColor="#1E40AF"
+        android:pathData="M174,72 L212,72 L232,91 L174,91 Z" />
+
+    <!-- Telhado central -->
+    <path
+        android:fillColor="#1E3A8A"
+        android:pathData="M115,70 L150,43 L185,70 L175,77 L150,58 L125,77 Z" />
+
+    <!-- Bandeira -->
+    <path
+        android:strokeColor="#1E3A8A"
+        android:strokeWidth="2"
+        android:pathData="M150,43 L150,18" />
+
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M151,18 L174,22 L169,35 L151,31 Z" />
+
+    <!-- Relógio -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M150,78
+                          m-14,0
+                          a14,14 0,1 0,28 0
+                          a14,14 0,1 0,-28 0" />
+
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M150,78 L150,70 M150,78 L157,78" />
+
+    <!-- Janelas -->
+    <path
+        android:fillColor="#3B82F6"
+        android:pathData="M92,104 H106 V119 H92 Z
+                          M92,127 H106 V142 H92 Z
+                          M194,104 H208 V119 H194 Z
+                          M194,127 H208 V142 H194 Z" />
+
+    <!-- Porta -->
+    <path
+        android:fillColor="#1E3A8A"
+        android:pathData="M138,119 H162 V150 H138 Z" />
+
+    <!-- Arbustos -->
+    <path
+        android:fillColor="#60A5FA"
+        android:pathData="M35,150 C24,136 35,124 46,131
+                          C50,115 72,121 72,138
+                          C83,132 91,143 88,150 Z
+                          M214,150 C210,135 225,125 235,133
+                          C242,115 264,125 260,140
+                          C272,134 282,145 276,150 Z" />
+
+    <!-- Base -->
+    <path
+        android:strokeColor="#93C5FD"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M25,152 L280,152" />
+
+</vector>

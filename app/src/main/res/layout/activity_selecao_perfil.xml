@@ -1,185 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC"
-    android:padding="20dp">
+    android:background="#F8FAFC">
 
-    <!-- Botão Voltar -->
-    <ImageView
-        android:id="@+id/btnVoltar"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Voltar"
-        android:src="@android:drawable/ic_menu_revert"
-        app:tint="#4C1D95" />
-
-    <!-- Títulos do Topo -->
-    <TextView
-        android:id="@+id/txtTitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btnVoltar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:text="Como deseja entrar?"
-        android:textColor="#1E1B4B"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/txtSubtitulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txtTitulo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="6dp"
-        android:text="Escolha o seu perfil para continuar."
-        android:textColor="#64748B"
-        android:textSize="14sp" />
-
-    <!-- Container dos Cartões de Perfil -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txtSubtitulo"
-        android:layout_marginTop="32dp"
-        android:orientation="vertical">
-
-        <!-- Cartão 1: Sou Aluno -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardAluno"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="#F3E8FF"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeColor="#E9D5FF"
-            app:strokeWidth="1dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="20dp">
-
-                <ImageView
-                    android:id="@+id/iconAluno"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_centerVertical="true"
-                    android:src="@android:drawable/ic_menu_agenda"
-                    app:tint="#581C87" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/iconAluno"
-                    android:layout_marginStart="16dp"
-                    android:layout_toStartOf="@id/arrowAluno"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Sou aluno"
-                        android:textColor="#3B0764"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Acesse seus horários, tarefas e avisos da escola."
-                        android:textColor="#6B21A8"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/arrowAluno"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@android:drawable/ic_media_play"
-                    app:tint="#581C87" />
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Cartão 2: Administrativo -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardAdministrativo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:strokeColor="#E2E8F0"
-            app:strokeWidth="1dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="20dp">
-
-                <ImageView
-                    android:id="@+id/iconAdmin"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_centerVertical="true"
-                    android:src="@android:drawable/ic_menu_myplaces"
-                    app:tint="#581C87" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/iconAdmin"
-                    android:layout_marginStart="16dp"
-                    android:layout_toStartOf="@id/arrowAdmin"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Administrativo"
-                        android:textColor="#1E1B4B"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Cadastre e gerencie as informações da instituição."
-                        android:textColor="#64748B"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/arrowAdmin"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@android:drawable/ic_media_play"
-                    app:tint="#4C1D95" />
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-
-    <!-- Onda Inferior Decorativa (Opcional para dar o toque igualzinho à imagem) -->
+    <!-- Onda decorativa inferior -->
     <View
+        android:id="@+id/ondaInferior"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="90dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_bottom_wave_light" />
+
+    <!-- Conteúdo principal -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="110dp">
+
+            <!-- Botão voltar -->
+            <ImageView
+                android:id="@+id/btnVoltar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Voltar"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="#1E3A8A" />
+
+            <!-- Título principal -->
+            <TextView
+                android:id="@+id/txtTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="55dp"
+                android:gravity="center"
+                android:text="Como deseja entrar?"
+                android:textColor="#0F172A"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <!-- Subtítulo -->
+            <TextView
+                android:id="@+id/txtSubtitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Escolha seu perfil para continuar."
+                android:textColor="#64748B"
+                android:textSize="15sp" />
+
+            <!-- CARTÃO 1: SOU ALUNO -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAluno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="#EFF6FF"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="2dp"
+                app:strokeColor="#BFDBFE"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="20dp">
+
+                    <!-- Ícone aluno -->
+                    <ImageView
+                        android:id="@+id/iconAluno"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:src="@drawable/ic_graduation"
+                        android:contentDescription="Aluno"
+                        app:tint="#1E40AF" />
+
+                    <!-- Informações aluno -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sou aluno"
+                            android:textColor="#1E3A8A"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Acesse seus horários, tarefas e avisos da escola."
+                            android:textColor="#475569"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                    <!-- Seta aluno -->
+                    <ImageView
+                        android:id="@+id/arrowAluno"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_chevron_right"
+                        android:contentDescription="Continuar como aluno"
+                        app:tint="#1E40AF" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARTÃO 2: ADMINISTRATIVO -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAdministrativo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="3dp"
+                app:strokeColor="#DBEAFE"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="20dp">
+
+                    <!-- Ícone administrativo -->
+                    <ImageView
+                        android:id="@+id/iconAdmin"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:src="@drawable/ic_school"
+                        android:contentDescription="Administrativo"
+                        app:tint="#1E40AF" />
+
+                    <!-- Informações administrativo -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Administrativo"
+                            android:textColor="#0F172A"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Cadastre e gerencie as informações da instituição."
+                            android:textColor="#64748B"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                    <!-- Seta administrativo -->
+                    <ImageView
+                        android:id="@+id/arrowAdmin"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_chevron_right"
+                        android:contentDescription="Continuar como administrativo"
+                        app:tint="#1E40AF" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
